@@ -1,0 +1,3 @@
+rootProject.name = 'fliq'
+
+include ':app'
