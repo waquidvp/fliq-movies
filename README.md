@@ -1,2 +1,3 @@
-# movie-recommendation-app
+# Fliq
+
 🎬 Movie recommendations personalized for you
