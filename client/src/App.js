@@ -5,6 +5,7 @@ import HomeTabNavigator from './Home/HomeTabNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
+  background-color: #ecf0f1;
 `;
 
 export default class App extends Component {
