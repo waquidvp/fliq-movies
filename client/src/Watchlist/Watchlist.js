@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
-import TabIcon from './components/TabIcon';
+import TabIcon from '../components/TabIcon';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -10,9 +10,9 @@ const MainContainer = styled.View`
 class Watchlist extends Component {
   static navigationOptions = {
     tabBarLabel: 'Watchlist',
-    tabBarIcon: ({ focused }) => (
+    tabBarIcon: config => (
       <TabIcon
-        focused={focused}
+        config={config}
         source={require('../assets/icons/Watchlist.png')}
       />
     ),

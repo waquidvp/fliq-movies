@@ -6,8 +6,11 @@ const TabIconImage = styled.Image`
   width: 24px;
 `;
 
-const TabIcon = ({ focused, source }) => (
-  <TabIconImage style={{ opacity: focused ? 0.87 : 0.54 }} source={source} />
+const TabIcon = ({ config: { tintColor }, source }) => (
+  <TabIconImage
+    style={{ opacity: tintColor === '#ffffff' ? 0.87 : 0.36 }}
+    source={source}
+  />
 );
 
 export default TabIcon;

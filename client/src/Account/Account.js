@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
-import TabIcon from './components/TabIcon';
+import TabIcon from '../components/TabIcon';
+import AccountTabNavigator from './AccountTabNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
+  padding-top: 16px;
 `;
 
 class Account extends Component {
   static navigationOptions = {
     tabBarLabel: 'Account',
-    tabBarIcon: ({ focused }) => (
+    tabBarIcon: config => (
       <TabIcon
-        focused={focused}
+        config={config}
         source={require('../assets/icons/Account.png')}
       />
     ),
@@ -20,7 +22,11 @@ class Account extends Component {
 
   state = {};
   render() {
-    return <MainContainer />;
+    return (
+      <MainContainer>
+        <AccountTabNavigator />
+      </MainContainer>
+    );
   }
 }
 

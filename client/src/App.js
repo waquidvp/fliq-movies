@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 
-import HomeTabNavigator from './Home/HomeTabNavigator';
+import MainTabNavigator from './Navigators/MainTabNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -12,7 +13,8 @@ export default class App extends Component {
   render() {
     return (
       <MainContainer>
-        <HomeTabNavigator />
+        <StatusBar barStyle="dark-content" backgroundColor="#ced2d2" />
+        <MainTabNavigator />
       </MainContainer>
     );
   }

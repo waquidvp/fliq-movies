@@ -1,15 +1,19 @@
 import { TabNavigator, TabBarTop } from 'react-navigation';
 
-import Cards from './Cards';
-import WhatsHotList from './WhatsHotList';
+import LikedList from './LikedList';
+import WatchedList from './WatchedList';
+import DislikedList from './DislikedList';
 
-const HomeTabNavigator = TabNavigator(
+const AccountTabNavigator = TabNavigator(
   {
-    Cards: {
-      screen: Cards,
+    Liked: {
+      screen: LikedList,
     },
-    WhatsHot: {
-      screen: WhatsHotList,
+    Watched: {
+      screen: WatchedList,
+    },
+    Disliked: {
+      screen: DislikedList,
     },
   },
   {
@@ -25,7 +29,7 @@ const HomeTabNavigator = TabNavigator(
           height: 0,
         },
         height: 35,
-        width: 260,
+        width: 270,
       },
       indicatorStyle: {
         backgroundColor: '#000000',
@@ -40,7 +44,7 @@ const HomeTabNavigator = TabNavigator(
         fontWeight: 'bold',
       },
       tabStyle: {
-        width: 130,
+        width: 90,
         height: 30,
       },
       upperCaseLabel: false,
@@ -48,4 +52,4 @@ const HomeTabNavigator = TabNavigator(
   },
 );
 
-export default HomeTabNavigator;
+export default AccountTabNavigator;

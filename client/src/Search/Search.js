@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
-import TabIcon from './components/TabIcon';
+import TabIcon from '../components/TabIcon';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -10,11 +10,8 @@ const MainContainer = styled.View`
 class Search extends Component {
   static navigationOptions = {
     tabBarLabel: 'Search',
-    tabBarIcon: ({ focused }) => (
-      <TabIcon
-        focused={focused}
-        source={require('../assets/icons/Search.png')}
-      />
+    tabBarIcon: config => (
+      <TabIcon config={config} source={require('../assets/icons/Search.png')} />
     ),
   };
 
