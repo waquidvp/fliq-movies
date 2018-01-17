@@ -18,6 +18,9 @@ const AccountTabNavigator = TabNavigator(
   },
   {
     tabBarComponent: TabBarTop,
+    tabBarPosition: 'top',
+    swipeEnabled: true,
+    animationEnabled: true,
     tabBarOptions: {
       style: {
         backgroundColor: '#ffffff00',
@@ -29,7 +32,7 @@ const AccountTabNavigator = TabNavigator(
           height: 0,
         },
         height: 35,
-        width: 270,
+        width: 300,
       },
       indicatorStyle: {
         backgroundColor: '#000000',
@@ -44,7 +47,7 @@ const AccountTabNavigator = TabNavigator(
         fontWeight: 'bold',
       },
       tabStyle: {
-        width: 90,
+        width: 100,
         height: 30,
       },
       upperCaseLabel: false,

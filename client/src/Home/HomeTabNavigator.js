@@ -14,6 +14,9 @@ const HomeTabNavigator = TabNavigator(
   },
   {
     tabBarComponent: TabBarTop,
+    tabBarPosition: 'top',
+    swipeEnabled: true,
+    animationEnabled: true,
     tabBarOptions: {
       style: {
         backgroundColor: '#ffffff00',
@@ -25,7 +28,7 @@ const HomeTabNavigator = TabNavigator(
           height: 0,
         },
         height: 35,
-        width: 260,
+        width: 280,
       },
       indicatorStyle: {
         backgroundColor: '#000000',
@@ -40,7 +43,7 @@ const HomeTabNavigator = TabNavigator(
         fontWeight: 'bold',
       },
       tabStyle: {
-        width: 130,
+        width: 140,
         height: 30,
       },
       upperCaseLabel: false,

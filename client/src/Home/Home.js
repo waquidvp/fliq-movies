@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 
 import TabIcon from '../components/TabIcon';
@@ -6,7 +7,6 @@ import HomeTabNavigator from './HomeTabNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
-  padding-top: 16px;
 `;
 
 class Home extends Component {
@@ -21,7 +21,9 @@ class Home extends Component {
   render() {
     return (
       <MainContainer>
-        <HomeTabNavigator />
+        <SafeAreaView style={{ flex: 1 }}>
+          <HomeTabNavigator />
+        </SafeAreaView>
       </MainContainer>
     );
   }

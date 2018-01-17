@@ -7,6 +7,7 @@ import MainTabNavigator from './Navigators/MainTabNavigator';
 const MainContainer = styled.View`
   flex: 1;
   background-color: #ecf0f1;
+  padding-top: 16;
 `;
 
 export default class App extends Component {
