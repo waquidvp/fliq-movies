@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
 import TabIcon from '../components/TabIcon';
+import Header from '../components/Header';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -20,7 +21,11 @@ class Watchlist extends Component {
 
   state = {};
   render() {
-    return <MainContainer />;
+    return (
+      <MainContainer>
+        <Header title="Your Watch list" />
+      </MainContainer>
+    );
   }
 }
 

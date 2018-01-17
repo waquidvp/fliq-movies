@@ -4,9 +4,14 @@ import styled from 'styled-components/native';
 
 import TabIcon from '../components/TabIcon';
 import AccountTabNavigator from './AccountTabNavigator';
+import Header from '../components/Header';
 
 const MainContainer = styled.View`
   flex: 1;
+`;
+
+const Profile = styled.View`
+  height: 74px;
 `;
 
 class Account extends Component {
@@ -24,7 +29,9 @@ class Account extends Component {
   render() {
     return (
       <MainContainer>
-        <SafeAreaView style={{ flex: 1 }} >
+        <SafeAreaView style={{ flex: 1 }}>
+          <Header title="Your Account" />
+          <Profile />
           <AccountTabNavigator />
         </SafeAreaView>
       </MainContainer>

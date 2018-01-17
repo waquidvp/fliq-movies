@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
 import TabIcon from '../components/TabIcon';
+import SearchBar from './components/SearchBar';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -17,7 +18,11 @@ class Search extends Component {
 
   state = {};
   render() {
-    return <MainContainer />;
+    return (
+      <MainContainer>
+        <SearchBar />
+      </MainContainer>
+    );
   }
 }
 
