@@ -7,6 +7,7 @@ import HomeTabNavigator from './HomeTabNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
+  padding-top: 16px;
 `;
 
 class Home extends Component {
@@ -21,9 +22,7 @@ class Home extends Component {
   render() {
     return (
       <MainContainer>
-        <SafeAreaView style={{ flex: 1 }}>
-          <HomeTabNavigator />
-        </SafeAreaView>
+        <HomeTabNavigator />
       </MainContainer>
     );
   }

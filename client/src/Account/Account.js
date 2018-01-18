@@ -29,11 +29,9 @@ class Account extends Component {
   render() {
     return (
       <MainContainer>
-        <SafeAreaView style={{ flex: 1 }}>
-          <Header title="Your Account" />
-          <Profile />
-          <AccountTabNavigator />
-        </SafeAreaView>
+        <Header title="Your Account" />
+        <Profile />
+        <AccountTabNavigator />
       </MainContainer>
     );
   }
