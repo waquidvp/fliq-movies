@@ -1,10 +1,18 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
+import Icon from '../components/Icon';
+
 const MainContainer = styled.View`
   height: 35px;
   margin-top: 8px;
   width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const InnerHeaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
@@ -30,12 +38,24 @@ const Indicator = styled.View`
   background-color: black;
 `;
 
-const Header = ({ title }) => (
+const IconContainer = styled.View`
+  position: absolute;
+  right: 16px;
+`;
+
+const Header = ({ title, rightIconSource }) => (
   <MainContainer>
-    <TitleContainer>
-      <Title>{title}</Title>
-    </TitleContainer>
-    <Indicator />
+    <InnerHeaderContainer>
+      <TitleContainer>
+        <Title>{title}</Title>
+      </TitleContainer>
+      <Indicator />
+    </InnerHeaderContainer>
+    {rightIconSource ? (
+      <IconContainer>
+        <Icon source={rightIconSource} />
+      </IconContainer>
+    ) : null}
   </MainContainer>
 );
 
