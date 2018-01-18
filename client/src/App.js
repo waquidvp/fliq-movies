@@ -16,7 +16,6 @@ export default class App extends Component {
       <MainContainer
         style={{
           paddingTop: screenConstants.statusBarHeight,
-          paddingBottom: screenConstants.bottomBarHeight,
         }}
       >
         <StatusBar

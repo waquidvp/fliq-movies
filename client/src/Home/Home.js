@@ -7,7 +7,7 @@ import HomeTabNavigator from './HomeTabNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
-  padding-top: 16px;
+  padding-top: 8px;
 `;
 
 class Home extends Component {
