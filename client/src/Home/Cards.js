@@ -19,6 +19,10 @@ const Card = styled.View`
   border-radius: 15;
   elevation: 6;
   width: ${props => props.width - 32};
+  shadow-color: #000000;
+  shadow-offset: 0 6px;
+  shadow-opacity: 0.3;
+  shadow-radius: 6;
 `;
 
 const SecondCard = styled.View`
@@ -26,9 +30,14 @@ const SecondCard = styled.View`
   background-color: white;
   border-radius: 15;
   elevation: 4;
+  zIndex: 4;
   width: ${props => props.width - 48};
   margin-bottom: 12px;
   margin-top: 20px;
+  shadow-color: #000000;
+  shadow-offset: 0 4px;
+  shadow-opacity: 0.3;
+  shadow-radius: 4;
 `;
 
 const AnimatedCard = Animated.createAnimatedComponent(Card);
@@ -41,6 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
+    zIndex: 6,
   },
 });
 
