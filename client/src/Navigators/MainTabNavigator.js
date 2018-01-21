@@ -4,11 +4,12 @@ import Home from '../Home/Home';
 import Search from '../Search/Search';
 import Watchlist from '../Watchlist/Watchlist';
 import Account from '../Account/Account';
+import Cards from '../Home/Cards';
 
 const MainTabNavigator = TabNavigator(
   {
     Home: {
-      screen: Home,
+      screen: Cards,
     },
     Search: {
       screen: Search,
@@ -31,7 +32,6 @@ const MainTabNavigator = TabNavigator(
         borderTopWidth: 0,
         paddingRight: 16,
         paddingLeft: 16,
-        height: 56,
       },
       activeTintColor: '#ffffff',
     },

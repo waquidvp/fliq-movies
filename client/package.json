@@ -10,6 +10,7 @@
     "react": "16.2.0",
     "react-native": "0.52.0",
     "react-native-interactable": "^0.1.7",
+    "react-native-linear-gradient": "^2.4.0",
     "react-navigation": "waquidvp/react-navigation",
     "styled-components": "^2.4.0"
   },
