@@ -98,6 +98,10 @@ const AddMovieButtonText = styled.Text`
   color: black;
   font-weight: 500;
   padding-left: 16px;
+  shadow-color: #000000;
+  shadow-offset: 0 3px;
+  shadow-opacity: 0.3;
+  shadow-radius: 3;
 `;
 
 const styles = StyleSheet.create({
