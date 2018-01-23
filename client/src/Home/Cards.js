@@ -30,9 +30,9 @@ const Card = styled.View`
   z-index: 6;
   width: ${props => props.width - 32};
   shadow-color: #000000;
-  shadow-offset: 0 6px;
+  shadow-offset: 0 5px;
   shadow-opacity: 0.3;
-  shadow-radius: 6;
+  shadow-radius: 5;
 `;
 
 const SecondCard = styled.View`
@@ -47,9 +47,9 @@ const SecondCard = styled.View`
   margin-bottom: 11px;
   margin-top: 23px;
   shadow-color: #000000;
-  shadow-offset: 0 5px;
+  shadow-offset: 0 4px;
   shadow-opacity: 0.3;
-  shadow-radius: 5;
+  shadow-radius: 4;
 `;
 
 const AnimatedCard = Animated.createAnimatedComponent(Card);

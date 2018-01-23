@@ -29,6 +29,10 @@ const ListItemContainer = styled.View`
   margin: 4px 16px;
   border-radius: 15px;
   elevation: 3;
+  shadow-color: #000000;
+  shadow-offset: 0 3px;
+  shadow-opacity: 0.3;
+  shadow-radius: 3;
 `;
 
 const styles = StyleSheet.create({
