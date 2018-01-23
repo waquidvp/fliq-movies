@@ -33,11 +33,20 @@ const ListItemContainer = styled.View`
   flex: 1;
   height: 106px;
   background-color: white;
-  margin: 4px 16px;
+  margin: 4px 8px;
   border-radius: 15px;
   elevation: 3;
-  overflow: hidden;
+  shadow-color: #000000;
+  shadow-offset: 0 3px;
+  shadow-opacity: 0.3;
+  shadow-radius: 3;
   flex-direction: row;
+`;
+
+const MoviePosterContainer = styled.View`
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  overflow: hidden;
 `;
 
 const MoviePoster = styled.Image`
@@ -91,6 +100,10 @@ const AddMovieButtonContainer = styled.View`
   border-radius: 22px;
   flex-direction: row;
   align-items: center;
+  shadow-color: #000000;
+  shadow-offset: 0 5px;
+  shadow-opacity: 0.3;
+  shadow-radius: 5;
 `;
 
 const AddMovieButtonText = styled.Text`
@@ -98,10 +111,6 @@ const AddMovieButtonText = styled.Text`
   color: black;
   font-weight: 500;
   padding-left: 16px;
-  shadow-color: #000000;
-  shadow-offset: 0 3px;
-  shadow-opacity: 0.3;
-  shadow-radius: 3;
 `;
 
 const styles = StyleSheet.create({
@@ -128,7 +137,7 @@ movieList = [
     key: 1,
     title: 'Fast and Furious 7',
     poster:
-      'http://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
+      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
     genre: ['Crime', 'Thriller'],
     year: 2016,
   },
@@ -136,7 +145,7 @@ movieList = [
     key: 2,
     title: 'Fast and Furious 7',
     poster:
-      'http://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
+      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
     genre: ['Crime', 'Thriller'],
     year: 2016,
   },
@@ -144,7 +153,7 @@ movieList = [
     key: 3,
     title: 'Fast and Furious 7',
     poster:
-      'http://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
+      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
     genre: ['Crime', 'Thriller'],
     year: 2016,
   },
@@ -152,7 +161,7 @@ movieList = [
     key: 4,
     title: 'Fast and Furious 7',
     poster:
-      'http://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
+      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
     genre: ['Crime', 'Thriller'],
     year: 2016,
   },
@@ -160,7 +169,7 @@ movieList = [
     key: 5,
     title: 'Fast and Furious 7',
     poster:
-      'http://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
+      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
     genre: ['Crime', 'Thriller'],
     year: 2016,
   },
@@ -168,7 +177,9 @@ movieList = [
 
 const WatchlistItem = ({ movie }) => (
   <ListItemContainer>
-    <MoviePoster source={{ uri: movie.poster }} />
+    <MoviePosterContainer>
+      <MoviePoster source={{ uri: movie.poster }} />
+    </MoviePosterContainer>
     <MovieInfoContainer>
       <Title>{movie.title}</Title>
       <GenreContainer>
