@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 
 import Home from '../Home/Home';
@@ -6,6 +7,11 @@ import Watchlist from '../Watchlist/Watchlist';
 import Account from '../Account/Account';
 import Cards from '../Home/Cards';
 import TabBarComponent from '../components/TabBarComponent';
+
+const TabBar = Platform.select({
+  ios: TabBarBottom,
+  android: TabBarComponent,
+});
 
 const MainTabNavigator = TabNavigator(
   {
@@ -25,7 +31,7 @@ const MainTabNavigator = TabNavigator(
   {
     tabBarPosition: 'bottom',
     animationEnabled: false,
-    tabBarComponent: TabBarComponent,
+    tabBarComponent: TabBar,
     tabBarOptions: {
       showLabel: false,
       style: {
