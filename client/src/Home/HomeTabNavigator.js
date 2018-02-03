@@ -27,7 +27,7 @@ const HomeTabNavigator = TabNavigator(
         shadowOffset: {
           height: 0,
         },
-        height: 35,
+        height: 40,
         width: 280,
       },
       indicatorStyle: {
@@ -44,7 +44,7 @@ const HomeTabNavigator = TabNavigator(
       },
       tabStyle: {
         width: 140,
-        height: 30,
+        height: 35,
       },
       upperCaseLabel: false,
     },

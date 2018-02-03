@@ -5,11 +5,12 @@ import Search from '../Search/Search';
 import Watchlist from '../Watchlist/Watchlist';
 import Account from '../Account/Account';
 import Cards from '../Home/Cards';
+import TabBarComponent from '../components/TabBarComponent';
 
 const MainTabNavigator = TabNavigator(
   {
     Home: {
-      screen: Cards,
+      screen: Home,
     },
     Search: {
       screen: Search,
@@ -24,7 +25,7 @@ const MainTabNavigator = TabNavigator(
   {
     tabBarPosition: 'bottom',
     animationEnabled: false,
-    tabBarComponent: TabBarBottom,
+    tabBarComponent: TabBarComponent,
     tabBarOptions: {
       showLabel: false,
       style: {

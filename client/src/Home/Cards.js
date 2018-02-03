@@ -68,10 +68,11 @@ const styles = StyleSheet.create({
 
 class Cards extends Component {
   static navigationOptions = {
-    tabBarLabel: 'Home',
-    tabBarIcon: config => (
-      <TabIcon config={config} source={require('../assets/icons/Cards.png')} />
-    ),
+    tabBarLabel: 'For you',
+    swipeEnabled: false,
+    // tabBarIcon: config => (
+    //   <TabIcon config={config} source={require('../assets/icons/Cards.png')} />
+    // ),
   };
 
   constructor() {
@@ -84,11 +85,15 @@ class Cards extends Component {
   render() {
     return (
       <MainContainer>
-        <Header title="For you" />
+        {/* <Header title="For you" /> */}
         <InnerContainer>
           <Interactable.View
             style={styles.card}
-            snapPoints={[{ x: Screen.width }, { x: 0 }, { x: -Screen.width }]}
+            snapPoints={[
+              { x: Screen.width + 25 },
+              { x: 0 },
+              { x: -Screen.width - 25 },
+            ]}
             animatedValueX={this.deltaX}
             horizontalOnly
           >
