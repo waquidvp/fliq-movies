@@ -6,6 +6,6 @@ const IconImage = styled.Image`
   width: 24px;
 `;
 
-const Icon = ({ source }) => <IconImage source={source} />;
+const Icon = ({ source, style }) => <IconImage source={source} style={style} />;
 
 export default Icon;

@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import Icon from '../components/Icon';
 
 const MainContainer = styled.View`
-  height: 35px;
+  height: 40px;
   margin-top: 8px;
   width: 100%;
   flex-direction: row;

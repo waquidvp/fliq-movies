@@ -185,10 +185,10 @@ const WatchlistItem = ({ movie }) => (
       <GenreContainer>
         {movie.genre.map((genre, index, array) => {
           if (array.length - 1 === index) {
-            return <Genre>{genre}</Genre>;
+            return <Genre key={index}>{genre}</Genre>;
           }
 
-          return <Genre>{`${genre}, `}</Genre>;
+          return <Genre key={index}>{`${genre}, `}</Genre>;
         })}
       </GenreContainer>
       <Year>{movie.year}</Year>
