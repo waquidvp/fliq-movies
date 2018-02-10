@@ -102,6 +102,7 @@ class Card extends React.Component {
       shadowRadiusAnim,
       shadowOffsetHeightAnim,
     } = this.state;
+    
     const { style, innerStyle, children } = this.props;
 
     const shadowElevation = {
@@ -125,7 +126,7 @@ class Card extends React.Component {
           onPressOut={() => this.toRest()}
           background={PlatformTouchable.SelectableBackgroundBorderless()}
           style={{
-            borderRadius: style.background,
+            borderRadius: style.borderRadius,
           }}
         >
           <CardContainer style={innerStyle}>{children}</CardContainer>

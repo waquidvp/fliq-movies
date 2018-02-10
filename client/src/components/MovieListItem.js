@@ -12,8 +12,8 @@ const MoviePosterContainer = styled.View`
 `;
 
 const MoviePoster = styled.Image`
-  height: 106px;
-  width: 72px;
+  height: 124px;
+  width: 84px;
 `;
 
 const MovieInfoContainer = styled.View`
@@ -58,7 +58,7 @@ const MovieListItem = ({ movie, RightIcon }) => (
   <Card
     style={{
       flex: 1,
-      height: 106,
+      height: 124,
       marginVertical: 4,
       marginHorizontal: 8,
       borderRadius: 15,
