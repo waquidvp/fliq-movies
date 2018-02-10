@@ -60,7 +60,7 @@ const MovieInfoContainer = styled.View`
   flex-direction: column;
   padding-left: 16px;
   justify-content: center;
-  max-width: 65%;
+  max-width: 66%;
 `;
 
 const Title = styled.Text`
@@ -71,6 +71,7 @@ const Title = styled.Text`
 
 const GenreContainer = styled.View`
   flex-direction: row;
+  flex-wrap: wrap;
 `;
 
 const Genre = styled.Text`

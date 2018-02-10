@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
+import Card from '../components/Card';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -8,7 +9,11 @@ const MainContainer = styled.View`
 class LikedList extends Component {
   state = {};
   render() {
-    return <MainContainer />;
+    return (
+      <MainContainer>
+        <Card />
+      </MainContainer>
+    );
   }
 }
 
