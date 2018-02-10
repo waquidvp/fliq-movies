@@ -30,37 +30,85 @@ class Card extends React.Component {
 
   state = {
     elevationAnim: new Animated.Value(this.props.elevation),
+    shadowOpacityAnim: new Animated.Value(this.props.elevation * 0.0015 + 0.18),
+    shadowRadiusAnim: new Animated.Value(this.props.elevation * 0.54),
+    shadowOffsetHeightAnim: new Animated.Value(this.props.elevation * 0.6),
   };
 
   toRest = () => {
-    const { elevationAnim } = this.state;
+    const {
+      elevationAnim,
+      shadowOpacityAnim,
+      shadowRadiusAnim,
+      shadowOffsetHeightAnim,
+    } = this.state;
     const { elevation } = this.props;
 
     Animated.timing(elevationAnim, {
       toValue: elevation,
       duration: 100,
     }).start();
+
+    Animated.parallel([
+      Animated.timing(shadowOpacityAnim, {
+        toValue: elevation * 0.0015 + 0.18,
+        duration: 100,
+      }),
+      Animated.timing(shadowRadiusAnim, {
+        toValue: elevation * 0.54,
+        duration: 100,
+      }),
+      Animated.timing(shadowOffsetHeightAnim, {
+        toValue: elevation * 0.6,
+        duration: 100,
+      }),
+    ]).start();
   };
 
   elevate = () => {
-    const { elevationAnim } = this.state;
+    const {
+      elevationAnim,
+      shadowOpacityAnim,
+      shadowRadiusAnim,
+      shadowOffsetHeightAnim,
+    } = this.state;
     const { activeElevation } = this.props;
 
     Animated.timing(elevationAnim, {
       toValue: activeElevation,
       duration: 100,
     }).start();
+
+    Animated.parallel([
+      Animated.timing(shadowOpacityAnim, {
+        toValue: activeElevation * 0.0015 + 0.18,
+        duration: 100,
+      }),
+      Animated.timing(shadowRadiusAnim, {
+        toValue: activeElevation * 0.54,
+        duration: 100,
+      }),
+      Animated.timing(shadowOffsetHeightAnim, {
+        toValue: activeElevation * 0.6,
+        duration: 100,
+      }),
+    ]).start();
   };
 
   render() {
-    const { elevationAnim } = this.state;
+    const {
+      elevationAnim,
+      shadowOpacityAnim,
+      shadowRadiusAnim,
+      shadowOffsetHeightAnim,
+    } = this.state;
     const { style, innerStyle, children } = this.props;
 
     const shadowElevation = {
-      shadowOpacity: 0.0015 * elevationAnim + 0.18,
-      shadowRadius: 0.54 * elevationAnim,
+      shadowOpacity: shadowOpacityAnim,
+      shadowRadius: shadowRadiusAnim,
       shadowOffset: {
-        height: 0.6 * elevationAnim,
+        height: shadowOffsetHeightAnim,
       },
     };
 
