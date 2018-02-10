@@ -5,9 +5,9 @@ const MainContainer = styled.View`
   flex: 1;
 `;
 
-class WhatsHotList extends Component {
+class Explore extends Component {
   static navigationOptions = {
-    tabBarLabel: "What's Hot 🔥",
+    tabBarLabel: 'Explore',
   };
 
   state = {};
@@ -16,4 +16,4 @@ class WhatsHotList extends Component {
   }
 }
 
-export default WhatsHotList;
+export default Explore;

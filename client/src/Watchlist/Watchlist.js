@@ -6,6 +6,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import TabIcon from '../components/TabIcon';
 import Header from '../components/Header';
 import Icon from '../components/Icon';
+import IconButton from '../components/IconButton';
+import MovieListItem from '../components/MovieListItem';
+import Card from '../components/Card';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -27,83 +30,6 @@ const ListSpacer = styled.View`
 
 const ListBottomSpacer = styled.View`
   height: 72px;
-`;
-
-const ListItemContainer = styled.View`
-  flex: 1;
-  height: 106px;
-  background-color: white;
-  margin: 4px 8px;
-  border-radius: 15px;
-  elevation: 3;
-  shadow-color: #000000;
-  shadow-offset: 0 3px;
-  shadow-opacity: 0.3;
-  shadow-radius: 3;
-  flex-direction: row;
-`;
-
-const MoviePosterContainer = styled.View`
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
-  overflow: hidden;
-`;
-
-const MoviePoster = styled.Image`
-  height: 106px;
-  width: 72px;
-`;
-
-const MovieInfoContainer = styled.View`
-  flex-direction: column;
-  padding-left: 16px;
-  justify-content: center;
-`;
-
-const Title = styled.Text`
-  font-size: 14px;
-  color: black;
-  font-weight: bold;
-`;
-
-const GenreContainer = styled.View`
-  flex-direction: row;
-`;
-
-const Genre = styled.Text`
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.54);
-  font-weight: bold;
-`;
-
-const Year = styled.Text`
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.54);
-  font-weight: bold;
-`;
-
-const IconContainer = styled.View`
-  flex: 1;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 16px;
-`;
-
-const AddMovieButtonContainer = styled.View`
-  position: absolute;
-  height: 44px;
-  padding: 0 16px;
-  background-color: white;
-  elevation: 6;
-  bottom: 16px;
-  border-radius: 22px;
-  flex-direction: row;
-  align-items: center;
-  shadow-color: #000000;
-  shadow-offset: 0 5px;
-  shadow-opacity: 0.3;
-  shadow-radius: 5;
 `;
 
 const AddMovieButtonText = styled.Text`
@@ -132,72 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-movieList = [
-  {
-    key: 1,
-    title: 'Fast and Furious 7',
-    poster:
-      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
-    genre: ['Crime', 'Thriller'],
-    year: 2016,
-  },
-  {
-    key: 2,
-    title: 'Fast and Furious 7',
-    poster:
-      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
-    genre: ['Crime', 'Thriller'],
-    year: 2016,
-  },
-  {
-    key: 3,
-    title: 'Fast and Furious 7',
-    poster:
-      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
-    genre: ['Crime', 'Thriller'],
-    year: 2016,
-  },
-  {
-    key: 4,
-    title: 'Fast and Furious 7',
-    poster:
-      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
-    genre: ['Crime', 'Thriller'],
-    year: 2016,
-  },
-  {
-    key: 5,
-    title: 'Fast and Furious 7',
-    poster:
-      'https://t1.gstatic.com/images?q=tbn:ANd9GcReedjA2vJSO4_6GDpsI3PShvbRqfAAEv03qaJ9qOxtiLZX0Jx7',
-    genre: ['Crime', 'Thriller'],
-    year: 2016,
-  },
-];
-
-const WatchlistItem = ({ movie }) => (
-  <ListItemContainer>
-    <MoviePosterContainer>
-      <MoviePoster source={{ uri: movie.poster }} />
-    </MoviePosterContainer>
-    <MovieInfoContainer>
-      <Title>{movie.title}</Title>
-      <GenreContainer>
-        {movie.genre.map((genre, index, array) => {
-          if (array.length - 1 === index) {
-            return <Genre key={index}>{genre}</Genre>;
-          }
-
-          return <Genre key={index}>{`${genre}, `}</Genre>;
-        })}
-      </GenreContainer>
-      <Year>{movie.year}</Year>
-    </MovieInfoContainer>
-    <IconContainer>
-      <Icon source={require('../assets/icons/Tick.png')} />
-    </IconContainer>
-  </ListItemContainer>
-);
+movieList = [];
 
 class Watchlist extends Component {
   static navigationOptions = {
@@ -222,7 +83,14 @@ class Watchlist extends Component {
           />
           <List
             data={movieList}
-            renderItem={({ item }) => <WatchlistItem movie={item} />}
+            renderItem={({ item }) => (
+              <MovieListItem
+                movie={item}
+                RightIcon={
+                  <IconButton source={require('../assets/icons/Tick.png')} />
+                }
+              />
+            )}
             ListHeaderComponent={() => <ListSpacer />}
             ListFooterComponent={() => <ListBottomSpacer />}
           />
@@ -231,10 +99,24 @@ class Watchlist extends Component {
             style={styles.fuzzyOverlayBottom}
           />
         </ListContainer>
-        <AddMovieButtonContainer>
+        <Card
+          style={{
+            position: 'absolute',
+            height: 44,
+            paddingHorizontal: 16,
+            bottom: 16,
+            borderRadius: 22,
+          }}
+          innerStyle={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+          elevation={6}
+          activeElevation={10}
+        >
           <Icon source={require('../assets/icons/Add.png')} />
           <AddMovieButtonText>Add Movie</AddMovieButtonText>
-        </AddMovieButtonContainer>
+        </Card>
       </MainContainer>
     );
   }

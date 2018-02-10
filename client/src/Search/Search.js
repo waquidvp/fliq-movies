@@ -8,6 +8,8 @@ import SearchBar from './components/SearchBar';
 import Icon from '../components/Icon';
 import { search } from '../api/search';
 import { getGenre } from '../api/genres';
+import MovieListItem from '../components/MovieListItem';
+import IconButton from '../components/IconButton';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -192,7 +194,14 @@ class Search extends Component {
           ) : (
             <SearchList
               data={searchResults}
-              renderItem={({ item }) => <MovieSearchItem movie={item} />}
+              renderItem={({ item }) => (
+                <MovieListItem
+                  movie={item}
+                  RightIcon={
+                    <IconButton source={require('../assets/icons/Add.png')} />
+                  }
+                />
+              )}
               ListHeaderComponent={() => <ListSpacer />}
               ListFooterComponent={() => <ListSpacer />}
               keyExtractor={this.keyExtractor}

@@ -1,15 +1,15 @@
 import { TabNavigator, TabBarTop } from 'react-navigation';
 
 import Cards from './Cards';
-import WhatsHotList from './WhatsHotList';
+import Explore from './Explore';
 
 const HomeTabNavigator = TabNavigator(
   {
     Cards: {
       screen: Cards,
     },
-    WhatsHot: {
-      screen: WhatsHotList,
+    Explore: {
+      screen: Explore,
     },
   },
   {
@@ -28,7 +28,7 @@ const HomeTabNavigator = TabNavigator(
           height: 0,
         },
         height: 40,
-        width: 280,
+        width: 240,
       },
       indicatorStyle: {
         backgroundColor: '#000000',
@@ -43,7 +43,7 @@ const HomeTabNavigator = TabNavigator(
         fontWeight: 'bold',
       },
       tabStyle: {
-        width: 140,
+        width: 120,
         height: 35,
       },
       upperCaseLabel: false,
