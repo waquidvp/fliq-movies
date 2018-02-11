@@ -103,13 +103,13 @@ class Watchlist extends Component {
           style={{
             position: 'absolute',
             height: 44,
-            paddingHorizontal: 16,
             bottom: 16,
             borderRadius: 22,
           }}
           innerStyle={{
             flexDirection: 'row',
             alignItems: 'center',
+            paddingHorizontal: 16,
           }}
           elevation={6}
           activeElevation={10}

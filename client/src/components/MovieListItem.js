@@ -54,7 +54,7 @@ const IconContainer = styled.View`
   padding-right: 8px;
 `;
 
-const MovieListItem = ({ movie, RightIcon }) => (
+const MovieListItem = ({ movie, RightIcon, onPress }) => (
   <Card
     style={{
       flex: 1,
@@ -66,6 +66,7 @@ const MovieListItem = ({ movie, RightIcon }) => (
     innerStyle={{
       flexDirection: 'row',
     }}
+    onPress={onPress}
     elevation={3}
     activeElevation={5}
   >

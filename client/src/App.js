@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 
-import MainTabNavigator from './Navigators/MainTabNavigator';
 import screenConstants from './utils/screenConstants';
+import MainStackNavigator from './Navigators/MainStackNavigator';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -13,17 +13,13 @@ const MainContainer = styled.View`
 export default class App extends Component {
   render() {
     return (
-      <MainContainer
-        style={{
-          paddingTop: screenConstants.statusBarHeight,
-        }}
-      >
+      <MainContainer>
         <StatusBar
           barStyle="dark-content"
           backgroundColor="#ced2d27f"
           translucent
         />
-        <MainTabNavigator />
+        <MainStackNavigator />
       </MainContainer>
     );
   }

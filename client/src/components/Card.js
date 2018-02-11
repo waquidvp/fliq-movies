@@ -26,6 +26,7 @@ class Card extends React.Component {
     activeElevation: PropTypes.number.isRequired,
     style: PropTypes.object.isRequired,
     innerStyle: PropTypes.object,
+    onPress: PropTypes.func,
   };
 
   state = {
@@ -102,8 +103,8 @@ class Card extends React.Component {
       shadowRadiusAnim,
       shadowOffsetHeightAnim,
     } = this.state;
-    
-    const { style, innerStyle, children } = this.props;
+
+    const { style, innerStyle, children, onPress } = this.props;
 
     const shadowElevation = {
       shadowOpacity: shadowOpacityAnim,
@@ -124,6 +125,7 @@ class Card extends React.Component {
         <Touch
           onPressIn={() => this.elevate()}
           onPressOut={() => this.toRest()}
+          onPress={() => onPress()}
           background={PlatformTouchable.SelectableBackgroundBorderless()}
           style={{
             borderRadius: style.borderRadius,

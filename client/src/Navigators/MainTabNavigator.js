@@ -1,4 +1,6 @@
+import React from 'react';
 import { Platform } from 'react-native';
+import styled from 'styled-components/native';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 
 import Home from '../Home/Home';
@@ -7,13 +9,18 @@ import Watchlist from '../Watchlist/Watchlist';
 import Account from '../Account/Account';
 import Cards from '../Home/Cards';
 import TabBarComponent from '../components/TabBarComponent';
+import screenConstants from '../utils/screenConstants';
+
+const MainContainer = styled.View`
+  flex: 1;
+`;
 
 const TabBar = Platform.select({
   ios: TabBarBottom,
   android: TabBarComponent,
 });
 
-const MainTabNavigator = TabNavigator(
+const InitialTabNavigator = TabNavigator(
   {
     Home: {
       screen: Home,
@@ -46,4 +53,24 @@ const MainTabNavigator = TabNavigator(
   },
 );
 
-export default MainTabNavigator;
+export default class MainTabNavigator extends React.Component {
+  state = {};
+
+  render() {
+    const { navigation } = this.props;
+
+    return (
+      <MainContainer
+        style={{
+          paddingTop: screenConstants.statusBarHeight,
+        }}
+      >
+        <InitialTabNavigator
+          screenProps={{
+            mainNavigation: navigation,
+          }}
+        />
+      </MainContainer>
+    );
+  }
+}
