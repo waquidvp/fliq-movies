@@ -311,7 +311,6 @@ class MovieDetail extends Component {
                           }
                         : require('../assets/images/PosterNotAvailable.png')
                     }
-                    resizeMode="contain"
                   />
                 </Card>
               </MoviePosterContainer>
