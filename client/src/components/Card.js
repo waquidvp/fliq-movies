@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 import PlatformTouchable from 'react-native-platform-touchable';
 
 import Touchable from '../components/Touchable';
+import { elevationToShadow } from '../utils/helper';
 
 const MainContainer = styled.View`
   background-color: white;
@@ -82,15 +83,15 @@ class Card extends React.Component {
 
     Animated.parallel([
       Animated.timing(shadowOpacityAnim, {
-        toValue: activeElevation * 0.0015 + 0.18,
+        toValue: elevationToShadow(activeElevation).shadowOpacity,
         duration: 100,
       }),
       Animated.timing(shadowRadiusAnim, {
-        toValue: activeElevation * 0.54,
+        toValue: elevationToShadow(activeElevation).shadowRadius,
         duration: 100,
       }),
       Animated.timing(shadowOffsetHeightAnim, {
-        toValue: activeElevation * 0.6,
+        toValue: elevationToShadow(activeElevation).shadowOffset.height,
         duration: 100,
       }),
     ]).start();
