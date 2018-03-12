@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
+import { YouTubeStandaloneAndroid } from 'react-native-youtube';
 
 import Header from '../components/Header';
 import Card from '../components/Card';
@@ -7,24 +8,22 @@ import screenConstants from '../utils/screenConstants';
 import Icon from '../components/Icon';
 import { getGenre } from '../api/genres';
 import { getMovieDetails, getCredits } from '../api/movie';
+import { minsToHours } from '../utils/helper';
+import Button from '../components/Button';
 
 const MainContainer = styled.View`
   flex: 1;
 `;
 
-const BackButtonText = styled.Text`
-  font-size: 14px;
-  color: black;
-  font-weight: bold;
-  padding-left: 4px;
-`;
+const Container = styled.View``;
 
 const MainScrollView = styled.ScrollView`
   flex: 1;
 `;
 
 const Backdrop = styled.Image`
-  width: ${screenConstants.width};
+  flex: 1;
+  width: 100%;
   height: ${9 / 16 * screenConstants.width + screenConstants.statusBarHeight};
 `;
 
@@ -32,9 +31,11 @@ const InnerContainer = styled.View`
   flex: 1;
   padding: 16px;
   padding-bottom: 0;
+  max-width: ${screenConstants.width};
 `;
 
 const TopRow = styled.View`
+  flex: 1;
   flex-direction: row;
 `;
 
@@ -43,14 +44,9 @@ const MoviePosterContainer = styled.View`
   padding-right: 8px;
 `;
 
-const MoviePosterInnerContainer = styled.View`
-  border-radius: 15px;
-  overflow: hidden;
-  elevation: 4;
-`;
-
 const MoviePoster = styled.Image`
   width: 100%;
+  flex: 1;
   aspect-ratio: 0.675;
 `;
 
@@ -58,6 +54,7 @@ const MovieQuickInfo = styled.View`
   flex: 1;
   padding-left: 8px;
   padding-vertical: 8px;
+  max-width: ${screenConstants.width};
 `;
 
 const Title = styled.Text`
@@ -79,7 +76,7 @@ const Genre = styled.Text`
 
 const Year = styled.Text`
   font-size: 14px;
-  color: -rgba(0, 0, 0, 0.54);
+  color: rgba(0, 0, 0, 0.54);
   font-weight: bold;
 `;
 
@@ -94,6 +91,7 @@ const BottomContainer = styled.View`
   flex-direction: column;
   padding-vertical: 16px;
   padding-bottom: 0;
+  max-width: ${screenConstants.width};
 `;
 
 const OverviewTitle = styled.Text`
@@ -106,22 +104,19 @@ const Overview = styled.Text`
   font-size: 14px;
   color: rgba(0, 0, 0, 0.54);
   font-weight: bold;
-  padding-vertical: 8px;
-`;
-
-const CrewListContainer = styled.View`
-  height: 76px;
+  padding: 8px 0;
+  max-width: ${screenConstants.width};
 `;
 
 const CrewList = styled.FlatList`
   flex: 1;
   padding-left: 12px;
+  max-width: ${screenConstants.width};
 `;
 
 const CrewCardContainer = styled.View`
-  height: 100%;
   justify-content: center;
-  padding: 0 4px;
+  padding: 8px 4px;
 `;
 
 const CrewTitle = styled.Text`
@@ -160,7 +155,7 @@ const CastList = styled.FlatList`
 `;
 
 const CastCardContainer = styled.View`
-  padding: 4px;
+  padding: 8px 4px;
 `;
 
 const CastProfileImage = styled.Image`
@@ -179,19 +174,20 @@ const CastDetailContainer = styled.View`
 const ButtonContainer = styled.View`
   flex: 1;
   justify-content: flex-end;
+  padding: 0 4px;
+  margin-top: 4px;
 `;
 
 const CrewCard = ({ crew }) => (
   <CrewCardContainer>
     <Card
       style={{
-        height: 60,
+        height: '100%',
         borderRadius: 15,
       }}
       innerStyle={{
         justifyContent: 'center',
-        paddingLeft: 10,
-        paddingRight: 16,
+        padding: 8,
       }}
       elevation={3}
       activeElevation={6}
@@ -207,6 +203,7 @@ const CastCard = ({ cast }) => (
   <CastCardContainer>
     <Card
       style={{
+        height: '100%',
         borderRadius: 15,
         width: 124,
       }}
@@ -249,13 +246,13 @@ class MovieDetail extends Component {
   getExtraMovieDetail = () => {
     const { movie } = this.props.navigation.state.params;
 
-    getMovieDetails(movie.id, movieDetails => {
+    getMovieDetails(movie.id, (movieDetails) => {
       this.setState({
         movieDetails,
       });
     });
 
-    getCredits(movie.id, credits => {
+    getCredits(movie.id, (credits) => {
       let { crew, cast } = credits;
 
       crew = crew.slice(0, 5);
@@ -299,7 +296,7 @@ class MovieDetail extends Component {
                   }}
                   elevation={4}
                   activeElevation={8}
-                  onPress={() => {}}
+                  basic
                 >
                   <MoviePoster
                     source={
@@ -311,6 +308,7 @@ class MovieDetail extends Component {
                           }
                         : require('../assets/images/PosterNotAvailable.png')
                     }
+                    resizeMode="cover"
                   />
                 </Card>
               </MoviePosterContainer>
@@ -328,48 +326,51 @@ class MovieDetail extends Component {
                   })}
                 </GenreContainer>
                 <Year>{movie.release_date.substring(0, 4)}</Year>
-                {movieDetails.runtime && (
-                  <Runtime>{`${movieDetails.runtime} mins`}</Runtime>
+                {!!movieDetails.runtime && (
+                  <Runtime>
+                    {movieDetails.runtime > 60
+                      ? `${minsToHours(movieDetails.runtime).hours} hrs ${
+                          minsToHours(movieDetails.runtime).minutes
+                        } mins`
+                      : `${minsToHours(movieDetails.runtime).minutes} mins`}
+                  </Runtime>
                 )}
                 <ButtonContainer>
-                  <Card
+                  <Button
+                    title="Play Trailer"
+                    icon={
+                      <Icon
+                        small
+                        source={require('../assets/icons/Play.png')}
+                      />
+                    }
                     style={{
-                      height: 36,
-                      borderRadius: 18,
-                      marginVertical: 4,
+                      marginBottom: 4,
                     }}
-                    innerStyle={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingLeft: 10,
-                      paddingRight: 16,
+                    textStyle={{
+                      flex: 1,
                     }}
-                    elevation={3}
-                    activeElevation={6}
-                    onPress={() => {}}
-                  >
-                    <Icon source={require('../assets/icons/Play.png')} />
-                    <BackButtonText>Watch Trailer</BackButtonText>
-                  </Card>
-                  <Card
+                    onPress={() =>
+                      YouTubeStandaloneAndroid.playVideo({
+                        apiKey: 'AIzaSyC9xM6d9S_2p4VAk6p9jTkxMzC5IZ4lTrs', // Your YouTube Developer API Key
+                        videoId: movieDetails.videos.results[0].key, // YouTube video ID
+                        autoplay: true, // Autoplay the video
+                      })
+                    }
+                  />
+                  <Button
+                    title="Watchlist"
+                    icon={
+                      <Icon small source={require('../assets/icons/Add.png')} />
+                    }
                     style={{
-                      height: 36,
-                      borderRadius: 18,
-                      marginVertical: 4,
+                      marginTop: 4,
                     }}
-                    innerStyle={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingLeft: 10,
-                      paddingRight: 16,
+                    textStyle={{
+                      flex: 1,
                     }}
-                    elevation={3}
-                    activeElevation={6}
                     onPress={() => {}}
-                  >
-                    <Icon source={require('../assets/icons/Add.png')} />
-                    <BackButtonText>Add to Watchlist</BackButtonText>
-                  </Card>
+                  />
                 </ButtonContainer>
               </MovieQuickInfo>
             </TopRow>
@@ -378,7 +379,7 @@ class MovieDetail extends Component {
               <Overview>{movie.overview}</Overview>
             </BottomContainer>
           </InnerContainer>
-          <CrewListContainer>
+          {crew.length > 0 ? (
             <CrewList
               data={crew}
               renderItem={({ item }) => <CrewCard crew={item} />}
@@ -386,41 +387,41 @@ class MovieDetail extends Component {
               keyExtractor={this.keyExtractor}
               horizontal
             />
-          </CrewListContainer>
-          <CastContainer>
-            <CastTitle>Cast</CastTitle>
-          </CastContainer>
-          <CastListContainer>
-            <CastList
-              data={cast}
-              renderItem={({ item }) => <CastCard cast={item} />}
-              ListFooterComponent={CrewListFooter}
-              keyExtractor={this.keyExtractor}
-              horizontal
-            />
-          </CastListContainer>
+          ) : null}
+
+          {cast.length > 0 ? (
+            <Container>
+              <CastContainer>
+                <CastTitle>Cast</CastTitle>
+              </CastContainer>
+              <CastListContainer>
+                <CastList
+                  data={cast}
+                  renderItem={({ item }) => <CastCard cast={item} />}
+                  ListFooterComponent={CrewListFooter}
+                  keyExtractor={this.keyExtractor}
+                  horizontal
+                />
+              </CastListContainer>
+            </Container>
+          ) : null}
         </MainScrollView>
-        <Card
+        <Button
+          title="Back"
+          icon={<Icon small source={require('../assets/icons/Back.png')} />}
           style={{
-            height: 36,
             position: 'absolute',
-            borderRadius: 18,
             left: 16,
             top: 8 + screenConstants.statusBarHeight,
           }}
           innerStyle={{
-            flexDirection: 'row',
-            alignItems: 'center',
             paddingLeft: 8,
-            paddingRight: 16,
           }}
-          elevation={3}
-          activeElevation={6}
+          iconStyle={{
+            paddingRight: 8,
+          }}
           onPress={() => navigation.goBack()}
-        >
-          <Icon source={require('../assets/icons/Back.png')} />
-          <BackButtonText>Back</BackButtonText>
-        </Card>
+        />
       </MainContainer>
     );
   }

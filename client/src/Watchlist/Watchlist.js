@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
+import { connect } from 'react-redux';
 
 import TabIcon from '../components/TabIcon';
 import Header from '../components/Header';
 import Icon from '../components/Icon';
 import IconButton from '../components/IconButton';
 import MovieListItem from '../components/MovieListItem';
-import Card from '../components/Card';
+import Button from '../components/Button';
+
+import { toggleWatchedMovie } from '../state/actions/watchlist';
+import Loading from '../components/Loading';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -32,13 +36,6 @@ const ListBottomSpacer = styled.View`
   height: 72px;
 `;
 
-const AddMovieButtonText = styled.Text`
-  font-size: 16px;
-  color: black;
-  font-weight: 500;
-  padding-left: 16px;
-`;
-
 const styles = StyleSheet.create({
   fuzzyOverlayTop: {
     height: 10,
@@ -58,8 +55,6 @@ const styles = StyleSheet.create({
   },
 });
 
-movieList = [];
-
 class Watchlist extends Component {
   static navigationOptions = {
     tabBarLabel: 'Watchlist',
@@ -73,53 +68,71 @@ class Watchlist extends Component {
 
   state = {};
   render() {
+    const { watchlist, onTickPressed, navigation } = this.props;
+    const { mainNavigation } = this.props.screenProps;
+
     return (
       <MainContainer>
         <Header title="Your Watch list" />
         <ListContainer>
           <LinearGradient
-            colors={['#ecf0f1', '#ecf0f100']}
+            colors={['#fafafa', '#fafafa00']}
             style={styles.fuzzyOverlayTop}
           />
-          <List
-            data={movieList}
-            renderItem={({ item }) => (
-              <MovieListItem
-                movie={item}
-                RightIcon={
-                  <IconButton source={require('../assets/icons/Tick.png')} />
-                }
-              />
-            )}
-            ListHeaderComponent={() => <ListSpacer />}
-            ListFooterComponent={() => <ListBottomSpacer />}
-          />
+          {watchlist.watchlistLoading ? (
+            <Loading />
+          ) : (
+            <List
+              data={watchlist.movies}
+              renderItem={({ item }) => (
+                <MovieListItem
+                  movie={item}
+                  RightIcon={
+                    <IconButton
+                      source={require('../assets/icons/Tick.png')}
+                      onPress={() => onTickPressed(item.movie.id)}
+                    />
+                  }
+                  onPress={() =>
+                    mainNavigation.navigate('MovieDetail', {
+                      movie: item.movie,
+                    })
+                  }
+                />
+              )}
+              ListHeaderComponent={() => <ListSpacer />}
+              ListFooterComponent={() => <ListBottomSpacer />}
+            />
+          )}
+
           <LinearGradient
-            colors={['#ecf0f100', '#ecf0f1']}
+            colors={['#fafafa00', '#fafafa']}
             style={styles.fuzzyOverlayBottom}
           />
         </ListContainer>
-        <Card
+        <Button
+          title="Add Movie"
           style={{
             position: 'absolute',
-            height: 44,
             bottom: 16,
-            borderRadius: 22,
           }}
-          innerStyle={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 16,
-          }}
+          big
           elevation={6}
           activeElevation={10}
-        >
-          <Icon source={require('../assets/icons/Add.png')} />
-          <AddMovieButtonText>Add Movie</AddMovieButtonText>
-        </Card>
+          onPress={() => navigation.navigate('Search')}
+          icon={<Icon source={require('../assets/icons/Add.png')} />}
+        />
       </MainContainer>
     );
   }
 }
 
-export default Watchlist;
+const mapStateToProps = state => ({
+  watchlist: state.watchlist,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onTickPressed: id => dispatch(toggleWatchedMovie(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Watchlist);

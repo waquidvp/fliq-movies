@@ -6,8 +6,7 @@ import Card from './Card';
 import { getGenre } from '../api/genres';
 
 const MoviePosterContainer = styled.View`
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
+  border-radius: 15px;
   overflow: hidden;
 `;
 
@@ -19,7 +18,7 @@ const MoviePoster = styled.Image`
 const MovieInfoContainer = styled.View`
   flex-direction: column;
   padding-left: 16px;
-  max-width: 66%;
+  max-width: 64%;
   justify-content: center;
 `;
 

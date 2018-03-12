@@ -1,18 +1,14 @@
-import tmdbApiKey from './config';
+import { tmdbApiKey, tmdbEndpoint } from './config';
 
 const getMovieDetails = (movie_id, callback) => {
-  fetch(
-    `https://api.themoviedb.org/3/movie/${movie_id}?api_key=${tmdbApiKey}&language=en-UK`,
-  )
+  fetch(`${tmdbEndpoint}/movie/${movie_id}?api_key=${tmdbApiKey}&language=en-UK&append_to_response=videos`,)
     .then(res => res.json())
     .then(res => callback(res))
     .catch(err => console.warn(err));
 };
 
 const getCredits = (movie_id, callback) => {
-  fetch(
-    `https://api.themoviedb.org/3/movie/${movie_id}/credits?api_key=${tmdbApiKey}`,
-  )
+  fetch(`${tmdbEndpoint}/movie/${movie_id}/credits?api_key=${tmdbApiKey}`)
     .then(res => res.json())
     .then(res => callback(res))
     .catch(err => console.warn(err));

@@ -7,7 +7,6 @@ import Home from '../Home/Home';
 import Search from '../Search/Search';
 import Watchlist from '../Watchlist/Watchlist';
 import Account from '../Account/Account';
-import Cards from '../Home/Cards';
 import TabBarComponent from '../components/TabBarComponent';
 import screenConstants from '../utils/screenConstants';
 
@@ -39,6 +38,7 @@ const InitialTabNavigator = TabNavigator(
     tabBarPosition: 'bottom',
     animationEnabled: false,
     tabBarComponent: TabBar,
+    lazy: true,
     tabBarOptions: {
       showLabel: false,
       style: {

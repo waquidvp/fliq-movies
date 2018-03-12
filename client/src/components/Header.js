@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import Icon from '../components/Icon';
+import IconButton from '../components/IconButton';
 
 const MainContainer = styled.View`
   height: 40px;
@@ -40,10 +40,10 @@ const Indicator = styled.View`
 
 const IconContainer = styled.View`
   position: absolute;
-  right: 16px;
+  right: 8px;
 `;
 
-const Header = ({ title, rightIconSource }) => (
+const Header = ({ title, rightIconSource, rightIconOnPress }) => (
   <MainContainer>
     <InnerHeaderContainer>
       <TitleContainer>
@@ -53,7 +53,10 @@ const Header = ({ title, rightIconSource }) => (
     </InnerHeaderContainer>
     {rightIconSource ? (
       <IconContainer>
-        <Icon source={rightIconSource} />
+        <IconButton
+          source={rightIconSource}
+          onPress={() => rightIconOnPress()}
+        />
       </IconContainer>
     ) : null}
   </MainContainer>

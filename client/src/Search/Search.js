@@ -1,24 +1,20 @@
 import React, { Component } from 'react';
-import { StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
+import { connect } from 'react-redux';
 
 import TabIcon from '../components/TabIcon';
 import SearchBar from './components/SearchBar';
-import Icon from '../components/Icon';
 import { search } from '../api/search';
-import { getGenre } from '../api/genres';
 import MovieListItem from '../components/MovieListItem';
 import IconButton from '../components/IconButton';
+import Loading from '../components/Loading';
+
+import { addMovie, removeMovie } from '../state/actions/watchlist';
 
 const MainContainer = styled.View`
   flex: 1;
-`;
-
-const LoadingContainer = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
 
 const ListContainer = styled.View`
@@ -53,12 +49,18 @@ const styles = StyleSheet.create({
 });
 
 class Search extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     tabBarLabel: 'Search',
     tabBarIcon: config => (
       <TabIcon config={config} source={require('../assets/icons/Search.png')} />
     ),
-  };
+    tabBarOnPress: ({ scene, jumpToIndex }) => {
+      const { params } = navigation.state;
+
+      jumpToIndex(scene.index);
+      if (params) params.focusSearchBar();
+    },
+  });
 
   state = {
     searchTerm: '',
@@ -66,13 +68,49 @@ class Search extends Component {
     loading: false,
   };
 
-  search = searchTerm => {
+  componentDidMount() {
+    const { navigation } = this.props;
+
+    navigation.setParams({
+      focusSearchBar: this.focusSearchBar,
+    });
+
+    this.focusSearchBar();
+  }
+
+  focusSearchBar = () => {
+    this.searchInput.input.focus();
+  };
+
+  search = (searchTerm) => {
+    const { watchlist } = this.props;
+
     if (searchTerm !== '') {
       this.setState({ loading: true });
-      search(searchTerm, searchResults => {
+      search(searchTerm, (searchResults) => {
+        let searchResultsList = searchResults.results;
+
+        searchResultsList = searchResultsList.map((movie) => {
+          const inWatchlist = watchlist.find(watchlistMovie => watchlistMovie.movie.id === movie.id,);
+
+          if (inWatchlist) {
+            return {
+              movie,
+              inWatchlist: true,
+              watched: inWatchlist.watched,
+            };
+          }
+
+          return {
+            movie,
+            inWatchlist: false,
+            watched: false,
+          };
+        });
+
         this.setState({
           searchTerm,
-          searchResults: searchResults.results,
+          searchResults: searchResultsList,
           loading: false,
         });
       });
@@ -83,33 +121,77 @@ class Search extends Component {
 
   keyExtractor = item => item.id;
 
+  handleTickPress = (item, index) => {
+    this.props.removeMovie(item.movie.id);
+
+    const newState = this.state.searchResults;
+    newState[index] = {
+      ...newState[index],
+      inWatchlist: false,
+    };
+
+    this.setState({
+      searchResults: newState,
+    });
+  };
+
+  handleAddPress = (item, index) => {
+    this.props.addMovie(item.movie);
+
+    const newState = this.state.searchResults;
+    newState[index] = {
+      ...newState[index],
+      inWatchlist: true,
+    };
+
+    this.setState({
+      searchResults: newState,
+    });
+  };
+
   render() {
     const { searchTerm, searchResults, loading } = this.state;
     const { mainNavigation } = this.props.screenProps;
 
     return (
       <MainContainer>
-        <SearchBar search={this.search} clear={this.clear} />
+        <SearchBar
+          search={this.search}
+          clear={this.clear}
+          ref={(searchInput) => {
+            this.searchInput = searchInput;
+          }}
+        />
         <ListContainer>
           <LinearGradient
-            colors={['#ecf0f1', '#ecf0f100']}
+            colors={['#fafafa', '#fafafa00']}
             style={styles.fuzzyOverlayTop}
           />
           {loading ? (
-            <LoadingContainer>
-              <ActivityIndicator size="large" />
-            </LoadingContainer>
+            <Loading />
           ) : (
             <SearchList
               data={searchResults}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <MovieListItem
-                  movie={item}
+                  movie={item.movie}
                   onPress={() =>
-                    mainNavigation.navigate('MovieDetail', { movie: item })
+                    mainNavigation.navigate('MovieDetail', {
+                      movie: item.movie,
+                    })
                   }
                   RightIcon={
-                    <IconButton source={require('../assets/icons/Add.png')} />
+                    item.inWatchlist && !item.watched ? (
+                      <IconButton
+                        source={require('../assets/icons/Tick.png')}
+                        onPress={() => this.handleTickPress(item, index)}
+                      />
+                    ) : (
+                      <IconButton
+                        source={require('../assets/icons/Add.png')}
+                        onPress={() => this.handleAddPress(item, index)}
+                      />
+                    )
                   }
                 />
               )}
@@ -119,7 +201,7 @@ class Search extends Component {
             />
           )}
           <LinearGradient
-            colors={['#ecf0f100', '#ecf0f1']}
+            colors={['#fafafa00', '#fafafa']}
             style={styles.fuzzyOverlayBottom}
           />
         </ListContainer>
@@ -128,4 +210,14 @@ class Search extends Component {
   }
 }
 
-export default Search;
+const mapStateToProps = state => ({
+  watchlist: state.watchlist,
+  search: state.search,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addMovie: movie => dispatch(addMovie(movie)),
+  removeMovie: id => dispatch(removeMovie(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

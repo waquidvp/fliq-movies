@@ -1,0 +1,27 @@
+{
+  "name": "fliq-server",
+  "version": "1.0.0",
+  "description": "Server for the Fliq Movie Recommendation App",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/index.js --watch ./src --exec babel-node",
+    "build": "babel src -d build"
+  },
+  "author": "Waquid Valiya Peedikakkal",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.6",
+    "node-fetch": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "nodemon": "^1.15.1"
+  }
+}

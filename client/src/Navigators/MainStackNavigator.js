@@ -2,6 +2,7 @@ import { StackNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import MovieDetail from '../MovieDetail/MovieDetail';
+import Preferences from '../Onboarding/Preferences';
 
 const MainStackNavigator = StackNavigator(
   {
@@ -11,13 +12,16 @@ const MainStackNavigator = StackNavigator(
     MovieDetail: {
       screen: MovieDetail,
     },
+    Preferences: {
+      screen: Preferences,
+    },
   },
   {
     navigationOptions: {
       header: null,
     },
     cardStyle: {
-      backgroundColor: '#ecf0f1',
+      backgroundColor: '#fafafa',
     },
   },
 );
