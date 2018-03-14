@@ -2,19 +2,19 @@ import { TabNavigator, TabBarTop } from 'react-navigation';
 
 import LikedList from './LikedList';
 import WatchedList from './WatchedList';
-import DislikedList from './DislikedList';
+// import DislikedList from './DislikedList';
 
 const AccountTabNavigator = TabNavigator(
   {
-    Liked: {
-      screen: LikedList,
-    },
     Watched: {
       screen: WatchedList,
     },
-    Disliked: {
-      screen: DislikedList,
+    Liked: {
+      screen: LikedList,
     },
+    // Disliked: {
+    //   screen: DislikedList,
+    // },
   },
   {
     tabBarComponent: TabBarTop,
@@ -32,7 +32,7 @@ const AccountTabNavigator = TabNavigator(
           height: 0,
         },
         height: 35,
-        width: 300,
+        width: 250,
       },
       indicatorStyle: {
         backgroundColor: '#000000',
@@ -47,7 +47,7 @@ const AccountTabNavigator = TabNavigator(
         fontWeight: 'bold',
       },
       tabStyle: {
-        width: 100,
+        width: 125,
         height: 30,
       },
       upperCaseLabel: false,

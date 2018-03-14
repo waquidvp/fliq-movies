@@ -17,7 +17,7 @@ const Slider = styled.Slider`
   margin: 8px 0;
 `;
 
-const MainSlider = ({ name, value }) => (
+const MainSlider = ({ name, value, onSlidingComplete }) => (
   <MainContainer>
     <Title>{name}</Title>
     <Slider
@@ -28,6 +28,7 @@ const MainSlider = ({ name, value }) => (
       maximumTrackTintColor="black"
       thumbTintColor="#455A64"
       value={value}
+      onSlidingComplete={onSlidingComplete}
     />
   </MainContainer>
 );

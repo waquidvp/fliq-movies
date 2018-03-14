@@ -4,15 +4,23 @@ import { connect } from 'react-redux';
 
 import Slider from './components/Slider';
 import Button from '../components/Button';
-import { getPreferences } from '../state/actions/recommend';
+import { getPreferences, setPreferences } from '../state/actions/recommend';
 import Loading from '../components/Loading';
+import Icon from '../components/Icon';
+import screenConstants from '../utils/screenConstants';
+
+const Container = styled.View`
+  flex: 1;
+`;
 
 const MainContainer = styled.ScrollView`
   flex: 1;
 `;
 
 const TutorialText = styled.Text`
-  padding: 48px 24px;
+  padding: 0 24px;
+  padding-top: 76px;
+  padding-bottom: 24px;
   font-size: 16px;
   color: black;
   font-weight: 400;
@@ -39,52 +47,87 @@ class Preferences extends React.Component {
     getPreferences();
   };
 
+  handleSliderChange = (genre, value) => {
+    this.setState({
+      [genre]: value,
+    });
+  };
+
+  submitPreferences = () => {
+    const {
+      recommend: { preferences },
+      setPreferences,
+      mainNavigation,
+    } = this.props;
+
+    const changedPreferences = this.state;
+
+    const newPreferences = {
+      ...preferences,
+      ...changedPreferences,
+    };
+
+    setPreferences(newPreferences);
+  };
+
   render() {
-    const { recommend } = this.props;
+    const { recommend, navigation, mainNavigation } = this.props;
     const { preferences } = recommend;
 
     return (
-      <MainContainer>
-        <TutorialText>
-          Tell me how much you like each catagory, it helps me recommend movies
-          to you.
-        </TutorialText>
-        {recommend.preferencesLoading ? (
-          <Loading />
-        ) : (
-          <SliderContainer>
-            <Slider name="Action" value={preferences.Action} />
-            <Slider name="Adventure" value={preferences.Adventure} />
-            <Slider name="Animation" value={preferences.Animation} />
-            <Slider name="Children's" value={preferences["Children's"]} />
-            <Slider name="Comedy" value={preferences.Comedy} />
-            <Slider name="Crime" value={preferences.Crime} />
-            <Slider name="Documentary" value={preferences.Documentary} />
-            <Slider name="Drame" value={preferences.Drama} />
-            <Slider name="Fantasy" value={preferences.Fantasy} />
-            <Slider name="Film-Noir" value={preferences['Film-Noir']} />
-            <Slider name="Horror" value={preferences.Horror} />
-            <Slider name="Musical" value={preferences.Musical} />
-            <Slider name="Mystery" value={preferences.Mystery} />
-            <Slider name="Romance" value={preferences.Romance} />
-            <Slider name="Sci-Fi" value={preferences['Sci-Fi']} />
-            <Slider name="Thriller" value={preferences.Thriller} />
-            <Slider name="War" value={preferences.War} />
-            <Slider name="Western" value={preferences.Western} />
-          </SliderContainer>
-        )}
-
-        <ButtonContainer>
-          <Button
-            title="Done"
-            style={{ flex: 1 }}
-            textStyle={{
-              flex: 1,
-            }}
-            onPress={() => {}}
-          />
-        </ButtonContainer>
-      </MainContainer>
+      <Container>
+        <MainContainer>
+          <TutorialText>
+            Tell me how much you like each catagory, it helps me recommend
+            movies to you.
+          </TutorialText>
+          {recommend.preferencesLoading ? (
+            <Loading />
+          ) : (
+            <SliderContainer>
+              {Object.keys(preferences).map(genre => (
+                <Slider
+                  name={genre}
+                  value={preferences[genre]}
+                  onSlidingComplete={value =>
+                    this.handleSliderChange(genre, value)
+                  }
+                />
+              ))}
+            </SliderContainer>
+          )}
+          <ButtonContainer>
+            {recommend.setPreferencesLoading ? (
+              <Loading />
+            ) : (
+              <Button
+                title="Done"
+                style={{ flex: 1 }}
+                textStyle={{
+                  flex: 1,
+                }}
+                onPress={() => this.submitPreferences()}
+              />
+            )}
+          </ButtonContainer>
+        </MainContainer>
+        <Button
+          title="Back"
+          icon={<Icon small source={require('../assets/icons/Back.png')} />}
+          style={{
+            position: 'absolute',
+            left: 16,
+            top: 8 + screenConstants.statusBarHeight,
+          }}
+          innerStyle={{
+            paddingLeft: 8,
+          }}
+          iconStyle={{
+            paddingRight: 8,
+          }}
+          onPress={() => navigation.goBack()}
+        />
+      </Container>
     );
   }
 }
@@ -95,6 +138,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPreferences: () => dispatch(getPreferences()),
+  setPreferences: userPreferences => dispatch(setPreferences(userPreferences)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Preferences);

@@ -12,8 +12,6 @@ class MainNavigator extends React.Component {
 
     if (token) return <MainStackNavigator />;
 
-    // if ()
-
     return <OnboardingStack />;
 
     // return <MainStackNavigator />;

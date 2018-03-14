@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import MovieCard from './components/MovieCard';
 import { recommend as recommendAction } from '../state/actions/recommend';
 import Loading from '../components/Loading';
+import { getWatchlist, getWatchedList } from '../state/actions/watchlist';
+import { addToLikedlist } from '../state/actions/ratings';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -17,10 +19,15 @@ class Cards extends Component {
     swipeEnabled: false,
   };
 
-  state = {};
+  state = {
+    movieDetails: null,
+  };
 
   componentDidMount() {
     this.getRecommendations();
+
+    this.props.getWatchlist();
+    this.props.getWatchedList();
   }
 
   getRecommendations = () => {
@@ -28,17 +35,46 @@ class Cards extends Component {
     getRecommendations();
   };
 
+  setMovieDetail = (movieDetail) => {
+    const { movieDetails } = this.state;
+
+    const movieDetailsId = movieDetail.id;
+
+    this.setState({
+      movieDetails: {
+        ...movieDetails,
+        [movieDetailsId]: movieDetail,
+      },
+    });
+  };
+
   render() {
-    const { recommend } = this.props;
+    const {
+      recommend: { recommendLoading, recommendations },
+      likeMovie,
+    } = this.props;
+    const { mainNavigation } = this.props.screenProps;
+    const { movieDetails } = this.state;
 
     return (
       <MainContainer>
-        {recommend.recommendLoading ? (
+        {recommendLoading ? (
           <Loading />
         ) : (
           <Swiper
-            cards={recommend.recommendations}
-            renderCard={movieId => <MovieCard movieId={movieId} />}
+            cards={recommendations}
+            renderCard={movieId => (
+              <MovieCard
+                movieId={movieId}
+                setMovieDetail={this.setMovieDetail}
+              />
+            )}
+            onTapCard={index =>
+              mainNavigation.navigate('MovieDetail', {
+                movie: movieDetails[recommendations[index]],
+              })
+            }
+            onSwipedRight={index => likeMovie(recommendations[index])}
             cardIndex={0}
             cardVerticalMargin={0}
             cardHorizontalMargin={0}
@@ -103,6 +139,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getRecommendations: () => dispatch(recommendAction()),
+  getWatchlist: () => dispatch(getWatchlist()),
+  getWatchedList: () => dispatch(getWatchedList()),
+  likeMovie: movie_id => dispatch(addToLikedlist(movie_id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cards);

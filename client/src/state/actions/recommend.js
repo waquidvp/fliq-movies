@@ -1,7 +1,4 @@
-import {
-  recommend as recommendApi,
-  getPreferences as getPreferencesApi,
-} from '../../api/recommend';
+import * as recommendApi from '../../api/recommend';
 
 const recommendStart = () => ({
   type: 'RECOMMEND_START',
@@ -22,7 +19,8 @@ export const recommend = () => (dispatch, getState) => {
 
   const { auth } = getState();
 
-  recommendApi(auth.user.id, auth.user.token)
+  recommendApi
+    .recommend(auth.user.id, auth.user.token)
     .then((response) => {
       console.log(response);
       dispatch(recommendSuccess(response));
@@ -49,9 +47,38 @@ export const getPreferences = () => (dispatch, getState) => {
 
   const { auth } = getState();
 
-  getPreferencesApi(auth.user.id, auth.user.token)
+  recommendApi
+    .getPreferences(auth.user.id, auth.user.token)
     .then((response) => {
       dispatch(getPreferencesSuccess(response));
     })
     .catch(error => dispatch(getPreferencesFailed(error)));
+};
+
+const setPreferencesStart = () => ({
+  type: 'SET_PREFERENCES_START',
+});
+
+const setPreferencesSuccess = response => ({
+  type: 'SET_PREFERENCES_SUCCESS',
+  preferences: response.preferences,
+});
+
+const setPreferencesFailed = error => ({
+  type: 'SET_PREFERENCES_FAILED',
+  error: error.message,
+});
+
+export const setPreferences = userPreferences => (dispatch, getState) => {
+  dispatch(setPreferencesStart());
+
+  const { auth } = getState();
+
+  recommendApi
+    .setPreferences(auth.user.id, userPreferences, auth.user.token)
+    .then((response) => {
+      dispatch(setPreferencesSuccess(response));
+      dispatch(recommend());
+    })
+    .catch(error => dispatch(setPreferencesFailed(error)));
 };

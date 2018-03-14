@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 import { YouTubeStandaloneAndroid } from 'react-native-youtube';
+import { connect } from 'react-redux';
 
-import Header from '../components/Header';
 import Card from '../components/Card';
 import screenConstants from '../utils/screenConstants';
 import Icon from '../components/Icon';
-import { getGenre } from '../api/genres';
-import { getMovieDetails, getCredits } from '../api/movie';
 import { minsToHours } from '../utils/helper';
 import Button from '../components/Button';
+import {
+  addToWatchlist as addToWatchlistAction,
+  removeFromWatchlist as removeFromWatchlistAction,
+} from '../state/actions/watchlist';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -233,44 +235,18 @@ class MovieDetail extends Component {
     title: 'Movie Detail',
   };
 
-  state = {
-    movieDetails: {},
-    crew: [],
-    cast: [],
-  };
+  state = {};
 
-  componentDidMount = () => {
-    this.getExtraMovieDetail();
-  };
-
-  getExtraMovieDetail = () => {
-    const { movie } = this.props.navigation.state.params;
-
-    getMovieDetails(movie.id, (movieDetails) => {
-      this.setState({
-        movieDetails,
-      });
-    });
-
-    getCredits(movie.id, (credits) => {
-      let { crew, cast } = credits;
-
-      crew = crew.slice(0, 5);
-      cast = cast.slice(0, 10);
-
-      this.setState({
-        crew,
-        cast,
-      });
-    });
-  };
-
-  keyExtractor = item => item.id;
+  keyExtractor = item => item.credit_id;
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      watchlist,
+      addToWatchlist,
+      removeFromWatchlist,
+    } = this.props;
     const { movie } = this.props.navigation.state.params;
-    const { movieDetails, crew, cast } = this.state;
 
     return (
       <MainContainer>
@@ -315,26 +291,22 @@ class MovieDetail extends Component {
               <MovieQuickInfo>
                 <Title>{movie.title}</Title>
                 <GenreContainer>
-                  {movie.genre_ids.map((genre_id, index, array) => {
+                  {movie.genres.map((genre, index, array) => {
                     if (array.length - 1 === index) {
-                      return <Genre key={genre_id}>{getGenre(genre_id)}</Genre>;
+                      return <Genre key={genre.id}>{genre.name}</Genre>;
                     }
 
-                    return (
-                      <Genre key={genre_id}>{`${getGenre(genre_id)}, `}</Genre>
-                    );
+                    return <Genre key={genre.id}>{`${genre.name}, `}</Genre>;
                   })}
                 </GenreContainer>
                 <Year>{movie.release_date.substring(0, 4)}</Year>
-                {!!movieDetails.runtime && (
-                  <Runtime>
-                    {movieDetails.runtime > 60
-                      ? `${minsToHours(movieDetails.runtime).hours} hrs ${
-                          minsToHours(movieDetails.runtime).minutes
-                        } mins`
-                      : `${minsToHours(movieDetails.runtime).minutes} mins`}
-                  </Runtime>
-                )}
+                <Runtime>
+                  {movie.runtime > 60
+                    ? `${minsToHours(movie.runtime).hours} hrs ${
+                        minsToHours(movie.runtime).minutes
+                      } mins`
+                    : `${minsToHours(movie.runtime).minutes} mins`}
+                </Runtime>
                 <ButtonContainer>
                   <Button
                     title="Play Trailer"
@@ -353,24 +325,46 @@ class MovieDetail extends Component {
                     onPress={() =>
                       YouTubeStandaloneAndroid.playVideo({
                         apiKey: 'AIzaSyC9xM6d9S_2p4VAk6p9jTkxMzC5IZ4lTrs', // Your YouTube Developer API Key
-                        videoId: movieDetails.videos.results[0].key, // YouTube video ID
+                        videoId: movie.videos.results[0].key, // YouTube video ID
                         autoplay: true, // Autoplay the video
                       })
                     }
                   />
-                  <Button
-                    title="Watchlist"
-                    icon={
-                      <Icon small source={require('../assets/icons/Add.png')} />
-                    }
-                    style={{
-                      marginTop: 4,
-                    }}
-                    textStyle={{
-                      flex: 1,
-                    }}
-                    onPress={() => {}}
-                  />
+                  {watchlist.movies.find(watchlistMovie => watchlistMovie.movie_id === movie.id,) ? (
+                    <Button
+                      title="Watchlist"
+                      icon={
+                        <Icon
+                          small
+                          source={require('../assets/icons/Tick.png')}
+                        />
+                      }
+                      style={{
+                        marginTop: 4,
+                      }}
+                      textStyle={{
+                        flex: 1,
+                      }}
+                      onPress={() => removeFromWatchlist(movie.id)}
+                    />
+                  ) : (
+                    <Button
+                      title="Watchlist"
+                      icon={
+                        <Icon
+                          small
+                          source={require('../assets/icons/Add.png')}
+                        />
+                      }
+                      style={{
+                        marginTop: 4,
+                      }}
+                      textStyle={{
+                        flex: 1,
+                      }}
+                      onPress={() => addToWatchlist(movie.id)}
+                    />
+                  )}
                 </ButtonContainer>
               </MovieQuickInfo>
             </TopRow>
@@ -379,9 +373,9 @@ class MovieDetail extends Component {
               <Overview>{movie.overview}</Overview>
             </BottomContainer>
           </InnerContainer>
-          {crew.length > 0 ? (
+          {movie.credits.crew.length > 0 ? (
             <CrewList
-              data={crew}
+              data={movie.credits.crew}
               renderItem={({ item }) => <CrewCard crew={item} />}
               ListFooterComponent={CrewListFooter}
               keyExtractor={this.keyExtractor}
@@ -389,14 +383,14 @@ class MovieDetail extends Component {
             />
           ) : null}
 
-          {cast.length > 0 ? (
+          {movie.credits.cast.length > 0 ? (
             <Container>
               <CastContainer>
                 <CastTitle>Cast</CastTitle>
               </CastContainer>
               <CastListContainer>
                 <CastList
-                  data={cast}
+                  data={movie.credits.cast}
                   renderItem={({ item }) => <CastCard cast={item} />}
                   ListFooterComponent={CrewListFooter}
                   keyExtractor={this.keyExtractor}
@@ -427,4 +421,14 @@ class MovieDetail extends Component {
   }
 }
 
-export default MovieDetail;
+const mapStateToProps = state => ({
+  watchlist: state.watchlist,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addToWatchlist: movie_id => dispatch(addToWatchlistAction(movie_id)),
+  removeFromWatchlist: movie_id =>
+    dispatch(removeFromWatchlistAction(movie_id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MovieDetail);

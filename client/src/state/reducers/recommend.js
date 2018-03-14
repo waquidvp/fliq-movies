@@ -6,6 +6,8 @@ const recommend = (
     preferencesLoading: false,
     preferences: {},
     preferencesError: null,
+    setPreferencesLoading: false,
+    setPreferencesError: null,
   },
   action,
 ) => {
@@ -43,6 +45,23 @@ const recommend = (
         ...state,
         preferencesLoading: false,
         preferencesError: action.error,
+      };
+    case 'SET_PREFERENCES_START':
+      return {
+        ...state,
+        setPreferencesLoading: true,
+      };
+    case 'SET_PREFERENCES_SUCCESS':
+      return {
+        ...state,
+        setPreferencesLoading: false,
+        preferences: action.preferences,
+      };
+    case 'SET_PREFERENCES_FAILED':
+      return {
+        ...state,
+        setPreferencesLoading: false,
+        setPreferencesError: action.error,
       };
     default:
       return state;

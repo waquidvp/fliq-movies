@@ -1,58 +1,31 @@
 const watchlist = (
   state = {
-    movies: {},
-    byId: [],
+    movies: [],
     watchlistLoading: false,
     watchlistError: '',
+    watchedList: [],
+    watchedListLoading: false,
+    watchedListError: '',
   },
   action,
 ) => {
   switch (action.type) {
-    case 'ADD_MOVIE': {
-      const movieIndex = state.findIndex(movie => movie.movie.id === action.movie.id && movie.watched === true,);
-
-      if (movieIndex > -1) {
-        newState = state;
-        newState.splice(movieIndex, 1);
-        newState = [
-          ...newState,
-          {
-            movie: action.movie,
-            watched: false,
-          },
-        ];
-        return newState;
-      }
-
-      return [
+    case 'ADD_TO_WATCHLIST_SUCCESS':
+      return {
         ...state,
-        {
-          movie: action.movie,
-          watched: false,
-        },
-      ];
-    }
-    case 'REMOVE_MOVIE': {
-      const movieIndex = state.findIndex(movie => movie.movie.id === action.id && movie.watched === false,);
-
-      if (movieIndex > -1) {
-        const newState = state;
-        newState.splice(movieIndex, 1);
-        return newState;
-      }
-
-      return state;
-    }
-    case 'TOGGLE_WATCHED_MOVIE':
-      return state.map((movie) => {
-        if (movie.movie.id === action.id) {
-          return {
-            ...movie,
-            watched: true,
-          };
-        }
-        return movie;
-      });
+        movies: action.watchlist,
+      };
+    case 'REMOVE_MOVIE_SUCCESS':
+      return {
+        ...state,
+        movies: action.watchlist,
+      };
+    case 'WATCHED_MOVIE_SUCCESS':
+      return {
+        ...state,
+        watchedList: action.watched,
+        movies: action.watchlist,
+      };
     case 'GET_WATCHLIST_START':
       return {
         ...state,
@@ -62,7 +35,7 @@ const watchlist = (
       return {
         ...state,
         watchlistLoading: false,
-        movies: action.response,
+        movies: action.watchlist,
       };
     case 'GET_WATCHLIST_FAILED':
       return {
@@ -70,10 +43,22 @@ const watchlist = (
         watchlistLoading: false,
         watchlistError: action.error,
       };
-    case 'ADD_TO_WATCHLIST_SUCCESS':
+    case 'GET_WATCHEDLIST_START':
       return {
         ...state,
-        movies: [...state.movies, action.response],
+        watchedListLoading: true,
+      };
+    case 'GET_WATCHEDLIST_SUCCESS':
+      return {
+        ...state,
+        watchedListLoading: false,
+        watchedList: action.watched,
+      };
+    case 'GET_WATCHEDLIST_FAILED':
+      return {
+        ...state,
+        watchedListLoading: false,
+        watchedListError: action.error,
       };
     default:
       return state;

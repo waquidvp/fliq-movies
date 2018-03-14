@@ -6,12 +6,16 @@ import { connect } from 'react-redux';
 
 import TabIcon from '../components/TabIcon';
 import SearchBar from './components/SearchBar';
-import { search } from '../api/search';
 import MovieListItem from '../components/MovieListItem';
 import IconButton from '../components/IconButton';
 import Loading from '../components/Loading';
 
-import { addMovie, removeMovie } from '../state/actions/watchlist';
+import {
+  addToWatchlist as addToWatchlistAction,
+  removeFromWatchlist as removeFromWatchlistAction,
+} from '../state/actions/watchlist';
+import { getMovieDetails } from '../api/movie';
+import { search as searchAction, clearSearch } from '../state/actions/search';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -63,9 +67,7 @@ class Search extends Component {
   });
 
   state = {
-    searchTerm: '',
-    searchResults: [],
-    loading: false,
+    movieLoaders: [],
   };
 
   componentDidMount() {
@@ -83,75 +85,48 @@ class Search extends Component {
   };
 
   search = (searchTerm) => {
-    const { watchlist } = this.props;
+    const { searchApi } = this.props;
 
     if (searchTerm !== '') {
-      this.setState({ loading: true });
-      search(searchTerm, (searchResults) => {
-        let searchResultsList = searchResults.results;
-
-        searchResultsList = searchResultsList.map((movie) => {
-          const inWatchlist = watchlist.find(watchlistMovie => watchlistMovie.movie.id === movie.id,);
-
-          if (inWatchlist) {
-            return {
-              movie,
-              inWatchlist: true,
-              watched: inWatchlist.watched,
-            };
-          }
-
-          return {
-            movie,
-            inWatchlist: false,
-            watched: false,
-          };
-        });
-
-        this.setState({
-          searchTerm,
-          searchResults: searchResultsList,
-          loading: false,
-        });
-      });
+      searchApi(searchTerm);
     }
   };
 
-  clear = () => this.setState({ searchResults: [], searchTerm: '' });
+  clear = () => {
+    const { clearSearch } = this.props;
+
+    clearSearch();
+  };
 
   keyExtractor = item => item.id;
 
-  handleTickPress = (item, index) => {
-    this.props.removeMovie(item.movie.id);
+  getExtraMovieDetail = (id, index) => {
+    const { mainNavigation } = this.props.screenProps;
+    const { movieLoaders } = this.state;
 
-    const newState = this.state.searchResults;
-    newState[index] = {
-      ...newState[index],
-      inWatchlist: false,
-    };
+    const newMovieLoaders = [...movieLoaders];
+    newMovieLoaders[index] = true;
 
     this.setState({
-      searchResults: newState,
+      movieLoaders: newMovieLoaders,
     });
-  };
 
-  handleAddPress = (item, index) => {
-    this.props.addMovie(item.movie);
+    getMovieDetails(id).then((movieDetails) => {
+      const nextMovieLoaders = [...movieLoaders];
+      nextMovieLoaders[index] = false;
 
-    const newState = this.state.searchResults;
-    newState[index] = {
-      ...newState[index],
-      inWatchlist: true,
-    };
-
-    this.setState({
-      searchResults: newState,
+      this.setState({
+        movieLoaders: nextMovieLoaders,
+      });
+      mainNavigation.navigate('MovieDetail', {
+        movie: movieDetails,
+      });
     });
   };
 
   render() {
-    const { searchTerm, searchResults, loading } = this.state;
-    const { mainNavigation } = this.props.screenProps;
+    const { search, addToWatchlist, removeFromWatchlist } = this.props;
+    const { movieLoaders } = this.state;
 
     return (
       <MainContainer>
@@ -167,29 +142,27 @@ class Search extends Component {
             colors={['#fafafa', '#fafafa00']}
             style={styles.fuzzyOverlayTop}
           />
-          {loading ? (
+          {search.isLoading ? (
             <Loading />
           ) : (
             <SearchList
-              data={searchResults}
+              data={search.results}
               renderItem={({ item, index }) => (
                 <MovieListItem
                   movie={item.movie}
-                  onPress={() =>
-                    mainNavigation.navigate('MovieDetail', {
-                      movie: item.movie,
-                    })
-                  }
+                  onPress={() => this.getExtraMovieDetail(item.movie.id, index)}
                   RightIcon={
-                    item.inWatchlist && !item.watched ? (
+                    movieLoaders[index] === true ? (
+                      <Loading />
+                    ) : item.inWatchlist ? (
                       <IconButton
                         source={require('../assets/icons/Tick.png')}
-                        onPress={() => this.handleTickPress(item, index)}
+                        onPress={() => removeFromWatchlist(item.movie.id)}
                       />
                     ) : (
                       <IconButton
                         source={require('../assets/icons/Add.png')}
-                        onPress={() => this.handleAddPress(item, index)}
+                        onPress={() => addToWatchlist(item.movie.id)}
                       />
                     )
                   }
@@ -210,14 +183,41 @@ class Search extends Component {
   }
 }
 
+const getSearchResults = (state) => {
+  const { search, watchlist } = state;
+
+  const searchWithWatchlist = search.results.map((movie) => {
+    const inWatchlist = watchlist.movies.find(watchlistMovie => watchlistMovie.movie_id === movie.id,);
+
+    if (inWatchlist) {
+      return {
+        movie,
+        inWatchlist: true,
+      };
+    }
+
+    return {
+      movie,
+      inWatchlist: false,
+    };
+  });
+
+  return {
+    ...search,
+    results: searchWithWatchlist,
+  };
+};
+
 const mapStateToProps = state => ({
-  watchlist: state.watchlist,
-  search: state.search,
+  search: getSearchResults(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addMovie: movie => dispatch(addMovie(movie)),
-  removeMovie: id => dispatch(removeMovie(id)),
+  searchApi: searchTerm => dispatch(searchAction(searchTerm)),
+  clearSearch: () => dispatch(clearSearch()),
+  addToWatchlist: movie_id => dispatch(addToWatchlistAction(movie_id)),
+  removeFromWatchlist: movie_id =>
+    dispatch(removeFromWatchlistAction(movie_id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

@@ -15,6 +15,8 @@ def initial_recommendation():
   if request.method == 'POST':
     user_preferences = request.get_json()
 
+    user_preferences['(no genres listed)'] = 0
+
     recommendations_df = content_based.get_movie_recommendations_from_genre(user_preferences, 60)
 
     recommendations_tmdb_ids_df = recommendations_df['movie_id'].apply(get_tmdb_id)

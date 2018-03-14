@@ -7,6 +7,12 @@ export const getWatchlist = (userId, token) => {
   return getData(url, token);
 };
 
+export const getWatchedList = (userId, token) => {
+  const url = `${apiEndpoint}/api/user/${userId}/watchlist/watched`;
+
+  return getData(url, token);
+};
+
 export const addToWatchlist = (userId, movie_id, token) => {
   const url = `${apiEndpoint}/api/user/${userId}/watchlist/add`;
 

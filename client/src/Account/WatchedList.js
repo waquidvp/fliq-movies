@@ -5,6 +5,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 
 import MovieListItem from '../components/MovieListItem';
+import { addMovieToCache as addMovieToCacheAction } from '../state/actions/moviesCache';
+import Loading from '../components/Loading';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -49,7 +51,8 @@ const styles = StyleSheet.create({
 class WatchedList extends Component {
   state = {};
   render() {
-    const { watchlist } = this.props;
+    const { watchlist, moviesCache, addMovieToCache } = this.props;
+    const { mainNavigation } = this.props.screenProps;
 
     return (
       <MainContainer>
@@ -58,33 +61,38 @@ class WatchedList extends Component {
             colors={['#fafafa', '#fafafa00']}
             style={styles.fuzzyOverlayTop}
           />
-          <List
-            data={watchlist}
-            renderItem={({ item }) => {
-              if (item.watched === true) {
-                return (
-                  <MovieListItem
-                    movie={item.movie}
-                    // RightIcon={
-                    //   <IconButton
-                    //     source={require('../assets/icons/Tick.png')}
-                    //     onPress={() => onTickPressed(item.movie.id)}
-                    //   />
-                    // }
-                    onPress={() =>
-                      mainNavigation.navigate('MovieDetail', {
-                        movie: item.movie,
-                      })
-                    }
-                  />
-                );
-              }
+          {watchlist.watchedListLoading ? (
+            <Loading />
+          ) : moviesCache.cacheLoading ? (
+            <Loading />
+          ) : (
+            <List
+              data={watchlist.watchedList}
+              renderItem={({ item }) => {
+                const inMoviesCache = Object.keys(moviesCache.movies).find(movieKey => movieKey == item.movie_id,);
+                if (inMoviesCache) {
+                  return (
+                    <MovieListItem
+                      movieDetail
+                      movie={moviesCache.movies[item.movie_id]}
+                      onPress={() =>
+                        mainNavigation.navigate('MovieDetail', {
+                          movie: moviesCache.movies[item.movie_id],
+                        })
+                      }
+                    />
+                  );
+                }
 
-              return null;
-            }}
-            ListHeaderComponent={() => <ListSpacer />}
-            ListFooterComponent={() => <ListSpacer />}
-          />
+                addMovieToCache(item.movie_id);
+
+                return null;
+              }}
+              ListHeaderComponent={() => <ListSpacer />}
+              ListFooterComponent={() => <ListSpacer />}
+            />
+          )}
+
           <LinearGradient
             colors={['#fafafa00', '#fafafa']}
             style={styles.fuzzyOverlayBottom}
@@ -97,6 +105,11 @@ class WatchedList extends Component {
 
 const mapStateToProps = state => ({
   watchlist: state.watchlist,
+  moviesCache: state.moviesCache,
 });
 
-export default connect(mapStateToProps)(WatchedList);
+const mapDispatchToProps = dispatch => ({
+  addMovieToCache: movie_id => dispatch(addMovieToCacheAction(movie_id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WatchedList);

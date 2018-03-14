@@ -1,18 +1,29 @@
 import { search as searchApi } from '../../api/search';
 
-export const receiveSearch = response => ({
-  type: 'RECEIVE_SEARCH_RESULTS',
-  response,
+const searchSuccess = response => ({
+  type: 'SEARCH_SUCCESS',
+  results: response.results,
 });
 
-export const startSearch = () => ({
-  type: 'STARTED_SEARCH',
+const searchStart = () => ({
+  type: 'SEARCH_START',
+});
+
+const searchFailed = error => ({
+  type: 'SEARCH_FAILED',
+  error,
 });
 
 export const search = searchTerm => (dispatch) => {
-  dispatch(startSearch());
+  dispatch(searchStart());
 
-  searchApi(searchTerm, (response) => {
-    dispatch(receiveSearch(response.results));
-  });
+  searchApi(searchTerm)
+    .then((response) => {
+      dispatch(searchSuccess(response));
+    })
+    .catch(error => dispatch(searchFailed(error)));
 };
+
+export const clearSearch = () => ({
+  type: 'CLEAR_SEARCH',
+});

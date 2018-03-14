@@ -53,8 +53,6 @@ class Account extends Component {
     const { signOut, user } = this.props;
     const { mainNavigation } = this.props.screenProps;
 
-    console.log(user);
-
     return (
       <MainContainer>
         <Header
@@ -78,7 +76,11 @@ class Account extends Component {
             <Button title="Sign Out" onPress={() => signOut()} />
           </ButtonContainer>
         </Profile>
-        <AccountTabNavigator />
+        <AccountTabNavigator
+          screenProps={{
+            mainNavigation,
+          }}
+        />
       </MainContainer>
     );
   }

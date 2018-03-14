@@ -111,8 +111,6 @@ router.post('/user/:userId/preferences', async (req, res) => {
   const { userId } = req.params;
   const { preferences } = req.body;
 
-  preferences['(no genres listed)'] = 1;
-
   const user = await User.findById(userId);
 
   user.preferences = preferences;

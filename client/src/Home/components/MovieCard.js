@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import { connect } from 'react-redux';
 import { YouTubeStandaloneAndroid } from 'react-native-youtube';
 
 import Loading from '../../components/Loading';
@@ -8,6 +9,10 @@ import Icon from '../../components/Icon';
 
 import { getMovieDetails } from '../../api/movie';
 import { minsToHours } from '../../utils/helper';
+import {
+  addToWatchlist as addToWatchlistApi,
+  removeFromWatchlist as removeFromWatchlistApi,
+} from '../../state/actions/watchlist';
 
 const MainCard = styled.View`
   flex: 1;
@@ -133,22 +138,25 @@ class MovieCard extends React.Component {
   };
 
   componentWillMount() {
-    const { movieId } = this.props;
+    const { movieId, setMovieDetail } = this.props;
 
     this.setState({
       loading: true,
     });
 
-    getMovieDetails(movieId, (movieDetails) => {
+    getMovieDetails(movieId).then((movieDetails) => {
       this.setState({
         loading: false,
         movieDetails,
       });
+
+      setMovieDetail(movieDetails);
     });
   }
 
   render() {
     const { loading, movieDetails } = this.state;
+    const { watchlist, addToWatchlist, removeFromWatchlist } = this.props;
 
     if (loading) return <Loading />;
 
@@ -225,19 +233,41 @@ class MovieCard extends React.Component {
                 }
               />
               <Spacer />
-              <Button
-                title="Watchlist"
-                icon={
-                  <Icon small source={require('../../assets/icons/Add.png')} />
-                }
-                style={{
-                  flex: 1,
-                }}
-                textStyle={{
-                  flex: 1,
-                }}
-                onPress={() => {}}
-              />
+              {watchlist.movies.find((movie) => movieDetails.id === movie.movie_id) ? (
+                <Button
+                  title="Watchlist"
+                  icon={
+                    <Icon
+                      small
+                      source={require('../../assets/icons/Tick.png')}
+                    />
+                  }
+                  style={{
+                    flex: 1,
+                  }}
+                  textStyle={{
+                    flex: 1,
+                  }}
+                  onPress={() => removeFromWatchlist(movieDetails.id)}
+                />
+              ) : (
+                <Button
+                  title="Watchlist"
+                  icon={
+                    <Icon
+                      small
+                      source={require('../../assets/icons/Add.png')}
+                    />
+                  }
+                  style={{
+                    flex: 1,
+                  }}
+                  textStyle={{
+                    flex: 1,
+                  }}
+                  onPress={() => addToWatchlist(movieDetails.id)}
+                />
+              )}
             </ButtonContainer>
           </OverBackdropMiddle>
           <OverBackdropFooter>
@@ -251,4 +281,13 @@ class MovieCard extends React.Component {
   }
 }
 
-export default MovieCard;
+const mapStateToProps = state => ({
+  watchlist: state.watchlist,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addToWatchlist: movie_id => dispatch(addToWatchlistApi(movie_id)),
+  removeFromWatchlist: movie_id => dispatch(removeFromWatchlistApi(movie_id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MovieCard);
