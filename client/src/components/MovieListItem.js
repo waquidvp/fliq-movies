@@ -6,8 +6,7 @@ import Card from './Card';
 import { getGenre } from '../api/genres';
 
 const MoviePosterContainer = styled.View`
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
+  border-radius: 15px;
   overflow: hidden;
 `;
 
@@ -19,7 +18,7 @@ const MoviePoster = styled.Image`
 const MovieInfoContainer = styled.View`
   flex-direction: column;
   padding-left: 16px;
-  max-width: 66%;
+  max-width: 64%;
   justify-content: center;
 `;
 
@@ -54,7 +53,9 @@ const IconContainer = styled.View`
   padding-right: 8px;
 `;
 
-const MovieListItem = ({ movie, RightIcon, onPress }) => (
+const MovieListItem = ({
+ movie, RightIcon, onPress, movieDetail 
+}) => (
   <Card
     style={{
       flex: 1,
@@ -82,13 +83,22 @@ const MovieListItem = ({ movie, RightIcon, onPress }) => (
     <MovieInfoContainer>
       <Title>{movie.title}</Title>
       <GenreContainer>
-        {movie.genre_ids.map((genre_id, index, array) => {
-          if (array.length - 1 === index) {
-            return <Genre key={genre_id}>{getGenre(genre_id)}</Genre>;
-          }
+        {movieDetail
+          ? movie.genres.map((genre, index, array) => {
+              if (array.length - 1 === index) {
+                return <Genre key={genre.id}>{genre.name}</Genre>;
+              }
 
-          return <Genre key={genre_id}>{`${getGenre(genre_id)}, `}</Genre>;
-        })}
+              return <Genre key={genre.id}>{`${genre.name}, `}</Genre>;
+            })
+          : movie.genre_ids.map((genre_id, index, array) => {
+              if (array.length - 1 === index) {
+                return <Genre key={genre_id}>{getGenre(genre_id)}</Genre>;
+              }
+
+              return <Genre key={genre_id}>{`${getGenre(genre_id)}, `}</Genre>;
+            })}
+        {}
       </GenreContainer>
       <Year>{movie.release_date.substring(0, 4)}</Year>
     </MovieInfoContainer>

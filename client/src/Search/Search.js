@@ -1,24 +1,26 @@
+// This is the search screen
+
 import React, { Component } from 'react';
-import { StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
+import { connect } from 'react-redux';
 
 import TabIcon from '../components/TabIcon';
 import SearchBar from './components/SearchBar';
-import Icon from '../components/Icon';
-import { search } from '../api/search';
-import { getGenre } from '../api/genres';
 import MovieListItem from '../components/MovieListItem';
 import IconButton from '../components/IconButton';
+import Loading from '../components/Loading';
+
+import {
+  addToWatchlist as addToWatchlistAction,
+  removeFromWatchlist as removeFromWatchlistAction,
+} from '../state/actions/watchlist';
+import { getMovieDetails } from '../api/movie';
+import { search as searchAction, clearSearch } from '../state/actions/search';
 
 const MainContainer = styled.View`
   flex: 1;
-`;
-
-const LoadingContainer = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
 
 const ListContainer = styled.View`
@@ -53,63 +55,120 @@ const styles = StyleSheet.create({
 });
 
 class Search extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     tabBarLabel: 'Search',
     tabBarIcon: config => (
       <TabIcon config={config} source={require('../assets/icons/Search.png')} />
     ),
-  };
+    tabBarOnPress: ({ scene, jumpToIndex }) => {
+      const { params } = navigation.state;
+
+      jumpToIndex(scene.index);
+      if (params) params.focusSearchBar();
+    },
+  });
 
   state = {
-    searchTerm: '',
-    searchResults: [],
-    loading: false,
+    movieLoaders: [],
   };
 
-  search = searchTerm => {
+  componentDidMount() {
+    const { navigation } = this.props;
+
+    navigation.setParams({
+      focusSearchBar: this.focusSearchBar,
+    });
+
+    this.focusSearchBar();
+  }
+
+  focusSearchBar = () => {
+    this.searchInput.input.focus();
+  };
+
+  search = (searchTerm) => {
+    const { searchApi } = this.props;
+
     if (searchTerm !== '') {
-      this.setState({ loading: true });
-      search(searchTerm, searchResults => {
-        this.setState({
-          searchTerm,
-          searchResults: searchResults.results,
-          loading: false,
-        });
-      });
+      searchApi(searchTerm);
     }
   };
 
-  clear = () => this.setState({ searchResults: [], searchTerm: '' });
+  clear = () => {
+    const { clearSearch } = this.props;
+
+    clearSearch();
+  };
 
   keyExtractor = item => item.id;
 
-  render() {
-    const { searchTerm, searchResults, loading } = this.state;
+  getExtraMovieDetail = (id, index) => {
     const { mainNavigation } = this.props.screenProps;
+    const { movieLoaders } = this.state;
+
+    // set the correct movie loader to true
+    const newMovieLoaders = [...movieLoaders];
+    newMovieLoaders[index] = true;
+
+    this.setState({
+      movieLoaders: newMovieLoaders,
+    });
+
+    // get the movie detail and nevigate to MovieDetail screen
+    getMovieDetails(id).then((movieDetails) => {
+      const nextMovieLoaders = [...movieLoaders];
+      nextMovieLoaders[index] = false;
+
+      this.setState({
+        movieLoaders: nextMovieLoaders,
+      });
+      mainNavigation.navigate('MovieDetail', {
+        movie: movieDetails,
+      });
+    });
+  };
+
+  render() {
+    const { search, addToWatchlist, removeFromWatchlist } = this.props;
+    const { movieLoaders } = this.state;
 
     return (
       <MainContainer>
-        <SearchBar search={this.search} clear={this.clear} />
+        <SearchBar
+          search={this.search}
+          clear={this.clear}
+          ref={(searchInput) => {
+            this.searchInput = searchInput;
+          }}
+        />
         <ListContainer>
           <LinearGradient
-            colors={['#ecf0f1', '#ecf0f100']}
+            colors={['#fafafa', '#fafafa00']}
             style={styles.fuzzyOverlayTop}
           />
-          {loading ? (
-            <LoadingContainer>
-              <ActivityIndicator size="large" />
-            </LoadingContainer>
+          {search.isLoading ? (
+            <Loading />
           ) : (
             <SearchList
-              data={searchResults}
-              renderItem={({ item }) => (
+              data={search.results}
+              renderItem={({ item, index }) => (
                 <MovieListItem
-                  movie={item}
-                  onPress={() =>
-                    mainNavigation.navigate('MovieDetail', { movie: item })
-                  }
+                  movie={item.movie}
+                  onPress={() => this.getExtraMovieDetail(item.movie.id, index)}
                   RightIcon={
-                    <IconButton source={require('../assets/icons/Add.png')} />
+                    movieLoaders[index] === true ? (
+                      <Loading />
+                    ) : item.inWatchlist ? (
+                      <IconButton
+                        source={require('../assets/icons/Tick.png')}
+                        onPress={() => removeFromWatchlist(item.movie.id)}
+                      />
+                    ) : (
+                      <IconButton
+                        source={require('../assets/icons/Add.png')}
+                        onPress={() => addToWatchlist(item.movie.id)}
+                      />
+                    )
                   }
                 />
               )}
@@ -119,7 +178,7 @@ class Search extends Component {
             />
           )}
           <LinearGradient
-            colors={['#ecf0f100', '#ecf0f1']}
+            colors={['#fafafa00', '#fafafa']}
             style={styles.fuzzyOverlayBottom}
           />
         </ListContainer>
@@ -128,4 +187,41 @@ class Search extends Component {
   }
 }
 
-export default Search;
+const getSearchResults = (state) => {
+  const { search, watchlist } = state;
+
+  const searchWithWatchlist = search.results.map((movie) => {
+    const inWatchlist = watchlist.movies.find(watchlistMovie => watchlistMovie.movie_id === movie.id,);
+
+    if (inWatchlist) {
+      return {
+        movie,
+        inWatchlist: true,
+      };
+    }
+
+    return {
+      movie,
+      inWatchlist: false,
+    };
+  });
+
+  return {
+    ...search,
+    results: searchWithWatchlist,
+  };
+};
+
+const mapStateToProps = state => ({
+  search: getSearchResults(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  searchApi: searchTerm => dispatch(searchAction(searchTerm)),
+  clearSearch: () => dispatch(clearSearch()),
+  addToWatchlist: movie_id => dispatch(addToWatchlistAction(movie_id)),
+  removeFromWatchlist: movie_id =>
+    dispatch(removeFromWatchlistAction(movie_id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

@@ -56,6 +56,9 @@ class SearchBar extends Component {
           value={searchTerm}
           returnKeyType="search"
           onEndEditing={() => search(searchTerm)}
+          innerRef={(input) => {
+            this.input = input;
+          }}
         />
       </MainContainer>
     );

@@ -1,15 +1,11 @@
 import { TabNavigator, TabBarTop } from 'react-navigation';
 
 import Cards from './Cards';
-import Explore from './Explore';
 
 const HomeTabNavigator = TabNavigator(
   {
     Cards: {
       screen: Cards,
-    },
-    Explore: {
-      screen: Explore,
     },
   },
   {
@@ -28,7 +24,7 @@ const HomeTabNavigator = TabNavigator(
           height: 0,
         },
         height: 40,
-        width: 240,
+        width: 120, // when adding explore tab, change to 240
       },
       indicatorStyle: {
         backgroundColor: '#000000',

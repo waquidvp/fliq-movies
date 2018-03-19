@@ -6,4 +6,16 @@ const elevationToShadow = elevation => ({
   },
 });
 
-export { elevationToShadow };
+const minsToHours = (minutes) => {
+  let hours = minutes / 60;
+  hours = Math.floor(hours);
+
+  const minutesLeft = minutes - hours * 60;
+
+  return {
+    hours,
+    minutes: minutesLeft,
+  };
+};
+
+export { elevationToShadow, minsToHours };

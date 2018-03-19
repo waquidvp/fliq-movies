@@ -77,7 +77,7 @@ const genres = [
   },
 ];
 
-const getGenre = id => {
+const getGenre = (id) => {
   for (let i = 0; i < genres.length; i++) {
     const genre = genres[i];
 

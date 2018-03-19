@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 
 import TabIcon from '../components/TabIcon';
@@ -20,9 +19,15 @@ class Home extends Component {
 
   state = {};
   render() {
+    const { mainNavigation } = this.props.screenProps;
+
     return (
       <MainContainer>
-        <HomeTabNavigator />
+        <HomeTabNavigator
+          screenProps={{
+            mainNavigation,
+          }}
+        />
       </MainContainer>
     );
   }

@@ -28,6 +28,7 @@ class Card extends React.Component {
     style: PropTypes.object.isRequired,
     innerStyle: PropTypes.object,
     onPress: PropTypes.func,
+    basic: PropTypes.bool,
   };
 
   state = {
@@ -53,15 +54,15 @@ class Card extends React.Component {
 
     Animated.parallel([
       Animated.timing(shadowOpacityAnim, {
-        toValue: elevation * 0.0015 + 0.18,
+        toValue: elevationToShadow(this.elevation).shadowOpacity,
         duration: 100,
       }),
       Animated.timing(shadowRadiusAnim, {
-        toValue: elevation * 0.54,
+        toValue: elevationToShadow(elevation).shadowRadius,
         duration: 100,
       }),
       Animated.timing(shadowOffsetHeightAnim, {
-        toValue: elevation * 0.6,
+        toValue: elevationToShadow(elevation).shadowOffset.height,
         duration: 100,
       }),
     ]).start();
@@ -97,6 +98,45 @@ class Card extends React.Component {
     ]).start();
   };
 
+  renderInside = () => {
+    const { innerStyle, children } = this.props;
+
+    return <CardContainer style={innerStyle}>{children}</CardContainer>;
+  };
+
+  renderTouch = () => {
+    const { basic, style, onPress } = this.props;
+
+    if (basic) {
+      return (
+        <Touch
+          onPressIn={() => this.elevate()}
+          onPressOut={() => this.toRest()}
+          background={PlatformTouchable.SelectableBackgroundBorderless()}
+          style={{
+            borderRadius: style.borderRadius,
+          }}
+        >
+          {this.renderInside()}
+        </Touch>
+      );
+    }
+
+    return (
+      <Touch
+        onPressIn={() => this.elevate()}
+        onPressOut={() => this.toRest()}
+        onPress={() => onPress()}
+        background={PlatformTouchable.SelectableBackgroundBorderless()}
+        style={{
+          borderRadius: style.borderRadius,
+        }}
+      >
+        {this.renderInside()}
+      </Touch>
+    );
+  };
+
   render() {
     const {
       elevationAnim,
@@ -123,17 +163,7 @@ class Card extends React.Component {
           ...style,
         }}
       >
-        <Touch
-          onPressIn={() => this.elevate()}
-          onPressOut={() => this.toRest()}
-          onPress={() => onPress()}
-          background={PlatformTouchable.SelectableBackgroundBorderless()}
-          style={{
-            borderRadius: style.borderRadius,
-          }}
-        >
-          <CardContainer style={innerStyle}>{children}</CardContainer>
-        </Touch>
+        {this.renderTouch()}
       </AnimatedCard>
     );
   }
