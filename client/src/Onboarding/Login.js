@@ -1,3 +1,5 @@
+// This is the login screen
+
 import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
@@ -9,6 +11,7 @@ import KeyboardDismissHOC from '../components/KeyboardDismissHOC';
 import { login as loginAction } from '../state/actions/auth';
 import Loading from '../components/Loading';
 
+// style definitions
 const MainContainer = styled.View`
   flex: 1;
 `;

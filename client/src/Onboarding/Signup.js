@@ -1,3 +1,5 @@
+// This is the sign up screen
+
 import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
@@ -11,6 +13,7 @@ import KeyboardDismissHOC from '../components/KeyboardDismissHOC';
 import { signup as signupAction } from '../state/actions/auth';
 import Loading from '../components/Loading';
 
+// Style definitions
 const MainContainer = styled.View`
   flex: 1;
 `;

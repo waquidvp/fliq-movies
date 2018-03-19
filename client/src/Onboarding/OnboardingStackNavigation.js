@@ -3,6 +3,7 @@ import { StackNavigator } from 'react-navigation';
 import Login from './Login';
 import Signup from './Signup';
 
+// defines a stack navigator
 const OnboardingStack = StackNavigator(
   {
     Login: {

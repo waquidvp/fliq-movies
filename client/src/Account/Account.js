@@ -1,3 +1,5 @@
+// This is the account screen
+
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
@@ -18,12 +20,6 @@ const Profile = styled.View`
   flex-direction: row;
   align-items: center;
 `;
-
-// const ProfilePicture = styled.Image`
-//   width: 50px;
-//   height: 50px;
-//   border-radius: 25px;
-// `;
 
 const AccountName = styled.Text`
   padding-left: 16px;
@@ -61,12 +57,6 @@ class Account extends Component {
           rightIconOnPress={() => mainNavigation.navigate('Preferences')}
         />
         <Profile>
-          {/* <ProfilePicture
-            source={{
-              uri:
-                'https://avatars1.githubusercontent.com/u/15846228?s=460&v=4',
-            }}
-          /> */}
           <Icon
             source={require('../assets/icons/Account.png')}
             style={{ height: 30, width: 30 }}

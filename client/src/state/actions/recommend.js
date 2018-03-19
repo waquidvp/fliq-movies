@@ -22,7 +22,6 @@ export const recommend = () => (dispatch, getState) => {
   recommendApi
     .recommend(auth.user.id, auth.user.token)
     .then((response) => {
-      console.log(response);
       dispatch(recommendSuccess(response));
     })
     .catch(error => dispatch(recommendFailed(error)));

@@ -1,3 +1,5 @@
+// This is the search screen
+
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
@@ -104,6 +106,7 @@ class Search extends Component {
     const { mainNavigation } = this.props.screenProps;
     const { movieLoaders } = this.state;
 
+    // set the correct movie loader to true
     const newMovieLoaders = [...movieLoaders];
     newMovieLoaders[index] = true;
 
@@ -111,6 +114,7 @@ class Search extends Component {
       movieLoaders: newMovieLoaders,
     });
 
+    // get the movie detail and nevigate to MovieDetail screen
     getMovieDetails(id).then((movieDetails) => {
       const nextMovieLoaders = [...movieLoaders];
       nextMovieLoaders[index] = false;

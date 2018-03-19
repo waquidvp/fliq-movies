@@ -7,6 +7,7 @@ import configureStore from './state';
 import Loading from './components/Loading';
 import MainNavigator from './Navigators/MainNavigator';
 
+// style definitions
 const MainContainer = styled.View`
   flex: 1;
   background-color: #f5f5f5;
@@ -19,7 +20,9 @@ class App extends Component {
   };
 
   componentWillMount() {
+    // listen for when the app goes into background or is closed
     AppState.addEventListener('change', this.handleAppStateChange);
+    // load the store from storage so the app state rehydrated
     this.loadStoreFromStorage();
   }
 
@@ -30,10 +33,14 @@ class App extends Component {
   loadStoreFromStorage = () => {
     this.setState({ storeLoading: true });
 
+    // gets the store from storage
     AsyncStorage.getItem('store')
       .then((storeValue) => {
         if (storeValue) {
+          // in storage, the store is saved as a string, so JSOn is parsed
           const initialStore = JSON.parse(storeValue);
+
+          // parts of the state is rehydrated by the store in storage
           this.setState({
             store: configureStore({
               auth: {
@@ -51,6 +58,7 @@ class App extends Component {
   };
 
   handleAppStateChange = () => {
+    // everytime the state of the app changes, the current state of the store is saved
     const { store } = this.state;
     let currentStore = store.getState();
     currentStore = JSON.stringify(currentStore);
@@ -60,6 +68,7 @@ class App extends Component {
   render() {
     const { store, storeLoading } = this.state;
 
+    // While the store is loading, render the loading screen
     if (storeLoading) {
       return (
         <MainContainer>
@@ -73,6 +82,7 @@ class App extends Component {
       );
     }
 
+    // if the store is loaded, the app is rendered by calling the root navigator: MainNavigator
     return (
       <Provider store={store}>
         <MainContainer>

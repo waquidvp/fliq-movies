@@ -30,6 +30,7 @@ def get_movie_recommendations_from_genre(user_preferences, num_of_recommendation
   # set movie_categories from the movie categories in the dataset
   movie_categories = movies_df.columns[4:] 
 
+  # run the movie score function on each movie
   movies_df['score'] = movies_df[movie_categories].apply(get_movie_score, args=([user_preferences]), axis=1)
 
   top_movies_df = movies_df.sort_values(by=['score'], ascending=False)[:num_of_recommendations]

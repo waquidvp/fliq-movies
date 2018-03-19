@@ -2,7 +2,6 @@ import { TabNavigator, TabBarTop } from 'react-navigation';
 
 import LikedList from './LikedList';
 import WatchedList from './WatchedList';
-// import DislikedList from './DislikedList';
 
 const AccountTabNavigator = TabNavigator(
   {
@@ -12,9 +11,6 @@ const AccountTabNavigator = TabNavigator(
     Liked: {
       screen: LikedList,
     },
-    // Disliked: {
-    //   screen: DislikedList,
-    // },
   },
   {
     tabBarComponent: TabBarTop,

@@ -1,3 +1,5 @@
+// This is the movie detail screen
+
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 import { YouTubeStandaloneAndroid } from 'react-native-youtube';

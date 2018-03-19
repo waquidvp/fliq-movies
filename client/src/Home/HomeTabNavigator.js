@@ -1,16 +1,12 @@
 import { TabNavigator, TabBarTop } from 'react-navigation';
 
 import Cards from './Cards';
-// import Explore from './Explore';
 
 const HomeTabNavigator = TabNavigator(
   {
     Cards: {
       screen: Cards,
     },
-    // Explore: {
-    //   screen: Explore,
-    // },
   },
   {
     tabBarComponent: TabBarTop,

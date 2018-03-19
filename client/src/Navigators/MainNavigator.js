@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 
 import MainStackNavigator from './MainStackNavigator';
 import OnboardingStack from '../Onboarding/OnboardingStackNavigation';
-import Preferences from '../Onboarding/Preferences';
 
 class MainNavigator extends React.Component {
   state = {};
   render() {
     const { token } = this.props.auth.user;
 
+    /* if there is a token in state that means that the user is logged in,
+    so the user is taken to the home navigator: MainStackNavigator */
     if (token) return <MainStackNavigator />;
 
+    // if there is no token, the onboarding stack is rendered
     return <OnboardingStack />;
-
-    // return <MainStackNavigator />;
   }
 }
 

@@ -1,3 +1,5 @@
+// This is the watchlist screen
+
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
@@ -79,6 +81,7 @@ class Watchlist extends Component {
 
     const movies = [];
 
+    // get the movie details for each movie in the watchlist
     watchlist.movies.forEach(({ movie_id }) => {
       getMovieDetails(movie_id).then((response) => {
         movies.push(response);
@@ -117,7 +120,8 @@ class Watchlist extends Component {
             <List
               data={watchlist.movies}
               renderItem={({ item }) => {
-                const inMoviesCache = Object.keys(moviesCache.movies).find((movieKey) => movieKey == item.movie_id,);
+                // if in cache then user the cache data, else fetch movie details and add to movie cache
+                const inMoviesCache = Object.keys(moviesCache.movies).find(movieKey => movieKey == item.movie_id,);
                 if (inMoviesCache) {
                   return (
                     <MovieListItem

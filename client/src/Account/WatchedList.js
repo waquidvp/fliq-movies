@@ -25,10 +25,6 @@ const ListSpacer = styled.View`
   height: 16px;
 `;
 
-const ListBottomSpacer = styled.View`
-  height: 72px;
-`;
-
 const styles = StyleSheet.create({
   fuzzyOverlayTop: {
     height: 10,

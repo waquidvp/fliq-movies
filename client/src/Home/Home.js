@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 
 import TabIcon from '../components/TabIcon';

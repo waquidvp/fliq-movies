@@ -19,7 +19,6 @@ const BannerText = styled.Text`
 const Banner = () => (
   <MainContainer>
     <MovieIcon />
-    {/* <BannerText>Never miss a movie.</BannerText> */}
   </MainContainer>
 );
 

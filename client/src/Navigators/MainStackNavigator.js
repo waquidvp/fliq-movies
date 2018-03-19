@@ -20,6 +20,7 @@ const MainStackNavigator = StackNavigator(
     navigationOptions: {
       header: null,
     },
+    initialRouteName: 'MainTabNavigator',
     cardStyle: {
       backgroundColor: '#fafafa',
     },

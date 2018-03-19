@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import User from '../models/user';
-import { postData } from '../../helpers';
+import { postData } from '../helpers';
 
+// intitialize the router
 const router = Router();
 
+// apply the auth middleware so that this endpoint is protected
 router.use(authMiddleware);
 
 router.get('/', (req, res) => {
@@ -41,6 +43,7 @@ router.post('/user/:userId/watchlist/add', async (req, res) => {
   const user = await User.findById(userId);
 
   let found = false;
+  // check if movie in watchlist
   user.watchlist.forEach((movie) => {
     if (movie.movie_id === movie_id) found = true;
   });
@@ -60,10 +63,12 @@ router.post('/user/:userId/watchlist/done', async (req, res) => {
   const { movie_id } = req.body;
 
   const user = await User.findById(userId);
+  // get movie index and remove the movie at that index
   const movieIndex = user.watchlist.findIndex(movie => movie.movie_id === movie_id,);
   if (movieIndex !== -1) user.watchlist.splice(movieIndex, 1);
 
   let inWatched = false;
+  // check if it is already in watched, else add the movie to watched list
   user.watched.forEach((movie) => {
     if (movie.movie_id === movie_id) inWatched = true;
   });
@@ -141,6 +146,7 @@ router.post('/user/:userId/ratings/likes', async (req, res) => {
   const user = await User.findById(userId);
 
   let found = false;
+  // check if user has already liked movie, else add to liked list
   user.likes.forEach((movie) => {
     if (movie.movie_id === movie_id) found = true;
   });

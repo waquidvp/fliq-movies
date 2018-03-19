@@ -1,13 +1,18 @@
+// This is the cards page
+
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 import Swiper from 'react-native-deck-swiper';
 import { connect } from 'react-redux';
 
 import MovieCard from './components/MovieCard';
-import { recommend as recommendAction } from '../state/actions/recommend';
+import {
+  recommend as recommendAction,
+  getPreferences,
+} from '../state/actions/recommend';
 import Loading from '../components/Loading';
 import { getWatchlist, getWatchedList } from '../state/actions/watchlist';
-import { addToLikedlist } from '../state/actions/ratings';
+import { addToLikedlist, getLikedlist } from '../state/actions/ratings';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -24,10 +29,20 @@ class Cards extends Component {
   };
 
   componentDidMount() {
+    const { mainNavigation } = this.props.screenProps;
+
     this.getRecommendations();
 
+    // pre fetch all data used in app as this is the first rendered item
     this.props.getWatchlist();
     this.props.getWatchedList();
+    this.props.getLikedlist();
+    this.props.getPreferences();
+
+    // if the user hasn't set preferences, navigate to the preferences page
+    if (Object.keys(this.props.recommend.preferences).length === 0) {
+      mainNavigation.navigate('Preferences');
+    }
   }
 
   getRecommendations = () => {
@@ -53,7 +68,6 @@ class Cards extends Component {
       recommend: { recommendLoading, recommendations },
       likeMovie,
     } = this.props;
-    const { mainNavigation } = this.props.screenProps;
     const { movieDetails } = this.state;
 
     return (
@@ -141,6 +155,8 @@ const mapDispatchToProps = dispatch => ({
   getRecommendations: () => dispatch(recommendAction()),
   getWatchlist: () => dispatch(getWatchlist()),
   getWatchedList: () => dispatch(getWatchedList()),
+  getLikedlist: () => dispatch(getLikedlist()),
+  getPreferences: () => dispatch(getPreferences()),
   likeMovie: movie_id => dispatch(addToLikedlist(movie_id)),
 });
 
